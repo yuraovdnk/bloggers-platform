@@ -93,16 +93,22 @@ export class BlogsController {
   async getPostsByBlogId(
     @Param('blogId', ParseUUIDPipe) blogId: string,
     @Query() queryParams: QueryParamsDto,
+    //@CurrentUser() userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    return this.postsQueryRepository.findByBlogId(queryParams, blogId);
+    const posts = await this.postsQueryRepository.findByBlogId(queryParams, blogId);
+    if (!posts) {
+      throw new NotFoundException();
+    }
+    return posts;
   }
 
-  //@Get(':blogId/posts')
-  //   async getPostsByBlogId(вооб
+  // @UseGuards(JwtExtractGuard)
+  // @Get(':blogId/posts')
+  // async getPostsByBlogId(
   //     @Param('blogId', ParseUUIDPipe) blogId: string,
   //     @Query() queryParams: QueryParamsDto,
   //     @CurrentUser() userId: string,
-  //   ): Promise<PageDto<PostViewModel>> {
-  //     return this.postsQueryRepository.findByBlogId(queryParams, blogId, userId);
-  //   }
+  // ): Promise<PageDto<PostViewModel>> {
+  //   return this.postsQueryRepository.findByBlogId(queryParams, blogId, userId);
+  // }
 }

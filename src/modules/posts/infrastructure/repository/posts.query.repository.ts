@@ -167,6 +167,9 @@ export class PostsQueryRepository {
       .offset(queryParams.skip)
       .getRawMany();
 
+    if (!posts.length) {
+      return null;
+    }
     const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
     return new PageDto(postViewDto, queryParams);
   }
