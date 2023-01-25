@@ -18,7 +18,7 @@ const configModule = ConfigModule.forRoot({
         autoLoadEntities: true,
         synchronize: true,
         extra: {
-          poolSize: 5,
+          poolSize: 4,
           connectionLimit: 5,
           max: 5,
           connectionTimeoutMillis: 1000,
