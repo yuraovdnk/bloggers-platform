@@ -1,16 +1,7 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsOptional } from 'class-validator';
 
-export interface IQueryParams {
-  searchNameTerm: string;
-  searchLoginTerm: string;
-  searchEmailTerm: string;
-  pageNumber: string;
-  pageSize: string;
-  sortDirection: string;
-  sortBy: string;
-}
 export enum Order {
   ASC = 'asc',
   DESC = 'desc',
@@ -58,16 +49,3 @@ export class QueryParamsDto {
     return checkSortField ? this.sortBy : 'createdAt';
   }
 }
-
-// @Injectable()
-// export class QueryParamsPipe implements PipeTransform {
-//   constructor(private Model: any) {}
-//   public async transform(value: IQueryParams) {
-//     console.log(this.Model, 'sfasfsa');
-//     const checkSortField = this.Model.hasOwnProperty(value.sortBy);
-//     const sortBy = checkSortField ? value.sortBy : 'createdAt';
-//     //TODO exception!!!!
-//     value.sortBy = sortBy;
-//     return value;
-//   }
-// }

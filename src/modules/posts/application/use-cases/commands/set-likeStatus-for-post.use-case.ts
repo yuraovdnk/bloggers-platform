@@ -9,15 +9,13 @@ export class SetLikeStatusForPostCommand {
   constructor(
     public readonly postId: string,
     public readonly likeStatus: StatusLike,
-    public readonly userId: string,
+    public readonly userId?: string,
   ) {}
 }
 @CommandHandler(SetLikeStatusForPostCommand)
 export class SetLikeStatusForPostUseCase
   implements ICommandHandler<SetLikeStatusForPostCommand>
 {
-  //constructor(private postsRepository: PostsRepository, ) {}
-
   constructor(
     private postsRepository: PostsRepository,
     private likesRepository: LikesRepository,

@@ -93,8 +93,16 @@ export class BlogsController {
   async getPostsByBlogId(
     @Param('blogId', ParseUUIDPipe) blogId: string,
     @Query() queryParams: QueryParamsDto,
-    @CurrentUser() userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    return this.postsQueryRepository.findByBlogId(queryParams, blogId, userId);
+    return this.postsQueryRepository.findByBlogId(queryParams, blogId);
   }
+
+  //@Get(':blogId/posts')
+  //   async getPostsByBlogId(вооб
+  //     @Param('blogId', ParseUUIDPipe) blogId: string,
+  //     @Query() queryParams: QueryParamsDto,
+  //     @CurrentUser() userId: string,
+  //   ): Promise<PageDto<PostViewModel>> {
+  //     return this.postsQueryRepository.findByBlogId(queryParams, blogId, userId);
+  //   }
 }

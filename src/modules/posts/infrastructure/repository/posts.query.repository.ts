@@ -161,7 +161,7 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .addOrderBy(`:orderField`, queryParams.order)
+      .addOrderBy(`:orderField`, queryParams.order) //TODO !!!
       .setParameter('orderField', `post.${queryParams.sortByField(SortFieldsPostModel)}`)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
