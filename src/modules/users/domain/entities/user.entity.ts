@@ -26,7 +26,7 @@ export class User {
   @Column({ type: 'boolean' })
   isConfirmedEmail: boolean;
 
-  @Column({ type: 'time with time zone', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @Column({ type: 'varchar', nullable: true })
