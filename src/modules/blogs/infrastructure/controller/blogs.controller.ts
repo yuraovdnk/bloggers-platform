@@ -52,14 +52,14 @@ export class BlogsController {
     return blog;
   }
 
-  @UseGuards(BasicAuthGuard)
+  //@UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(@Body() createBlog: CreateBlogDto): Promise<BlogViewModel> {
     const createdBlogId = await this.commandBus.execute(new CreateBlogCommand(createBlog));
     return this.blogsQueryRepository.findById(createdBlogId);
   }
 
-  @UseGuards(BasicAuthGuard)
+  //@UseGuards(BasicAuthGuard)
   @Put(':blogId')
   @HttpCode(204)
   async updateBlog(
@@ -69,14 +69,14 @@ export class BlogsController {
     return this.commandBus.execute(new UpdateBlogCommand(blogId, updateBlogDto));
   }
 
-  @UseGuards(BasicAuthGuard)
+  //@UseGuards(BasicAuthGuard)
   @Delete(':blogId')
   @HttpCode(204)
   async deleteBlog(@Param('blogId', ParseUUIDPipe) blogId: string): Promise<boolean> {
     return this.commandBus.execute(new DeleteBlogCommand(blogId));
   }
 
-  @UseGuards(BasicAuthGuard)
+  //@UseGuards(BasicAuthGuard)
   @Post(':blogId/posts')
   async createPostForBlog(
     @Param('blogId', ParseUUIDPipe) blogId: string,
@@ -88,7 +88,7 @@ export class BlogsController {
     return this.postsQueryRepository.findById(createdPostId);
   }
 
-  @UseGuards(JwtExtractGuard)
+  //@UseGuards(JwtExtractGuard)
   @Get(':blogId/posts')
   async getPostsByBlogId(
     @Param('blogId', ParseUUIDPipe) blogId: string,
