@@ -26,8 +26,7 @@ export class BlogsQueryRepository {
     queryBuilder
       .select('b')
       .where('b.name like :term', { term: `%${queryParams.searchNameTerm}%` })
-      .orderBy(`:sort`, queryParams.order)
-      .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order) //TODO !!
+      .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 

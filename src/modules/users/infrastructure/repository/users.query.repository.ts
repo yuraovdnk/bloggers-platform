@@ -4,6 +4,8 @@ import { User } from '../../domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { QueryParamsDto } from '../../../../common/pipes/query-params.dto';
 import { PageDto } from '../../../../common/utils/PageDto';
+import { SortFieldsBlogModel } from '../../../blogs/typing/blogs.types';
+import { SortFieldUserModel } from '../../typing/user.types';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -26,6 +28,7 @@ export class UsersQueryRepository {
         loginTerm: `%${queryParams.searchLoginTerm}%`,
         emailTerm: `%${queryParams.searchEmailTerm}%`,
       })
+      .orderBy(`user.${queryParams.sortByField(SortFieldUserModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 

@@ -19,3 +19,8 @@ export class UserModel {
   passwordRecoveryCode: string;
   expirationPasswordRecoveryCode: Date;
 }
+export class SortFieldUserModel {
+  login = 'login';
+  email = 'email';
+  createdAt = 'createdAt';
+}

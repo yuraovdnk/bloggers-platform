@@ -57,8 +57,7 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .addOrderBy(`:orderField`, queryParams.order)
-      .setParameter('orderField', `post.${queryParams.sortByField(SortFieldsPostModel)}`)
+      .addOrderBy(`post.${queryParams.sortByField(SortFieldsPostModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 
@@ -164,8 +163,7 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .addOrderBy(`:orderField`, queryParams.order) //TODO !!!
-      .setParameter('orderField', `post.${queryParams.sortByField(SortFieldsPostModel)}`)
+      .addOrderBy(`post.${queryParams.sortByField(SortFieldsPostModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 
