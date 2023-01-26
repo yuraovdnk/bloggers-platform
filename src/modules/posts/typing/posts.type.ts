@@ -9,7 +9,6 @@ export class SortFieldsPostModel {
   title = 'title';
   shortDescription = 'shortDescription';
   content = 'content';
-  blogName = 'blogName';
   createdAt = 'createdAt';
 }
 

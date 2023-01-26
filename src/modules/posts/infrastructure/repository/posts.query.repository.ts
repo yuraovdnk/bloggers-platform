@@ -17,6 +17,7 @@ export class PostsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string,
   ): Promise<PageDto<PostViewModel>> {
+    console.log(queryParams);
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
       .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
@@ -123,7 +124,6 @@ export class PostsQueryRepository {
     blogId: string,
     userId: string = null,
   ): Promise<PageDto<PostViewModel>> {
-    console.log(queryParams);
     const queryBuilder = this.postEntity.createQueryBuilder('post');
 
     queryBuilder
