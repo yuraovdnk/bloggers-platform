@@ -123,6 +123,7 @@ export class PostsQueryRepository {
     blogId: string,
     userId: string = null,
   ): Promise<PageDto<PostViewModel>> {
+    console.log(queryParams);
     const queryBuilder = this.postEntity.createQueryBuilder('post');
 
     queryBuilder

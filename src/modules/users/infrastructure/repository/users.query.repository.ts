@@ -21,7 +21,6 @@ export class UsersQueryRepository {
   }
 
   async findAll(queryParams: QueryParamsDto) {
-    console.log(queryParams);
     const [users, totalCount] = await this.userEntity
       .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt'])
