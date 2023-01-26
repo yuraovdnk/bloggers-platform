@@ -22,17 +22,19 @@ export class BlogsQueryRepository {
   }
 
   async findAll(queryParams: QueryParamsDto): Promise<PageDto<BlogViewModel>> {
-    const blogs = await this.blogEntity
-      .createQueryBuilder('b')
+    const queryBuilder = await this.blogEntity.createQueryBuilder('b');
+    queryBuilder
       .select('b')
       .where('b.name like :term', { term: `%${queryParams.searchNameTerm}%` })
       .orderBy(`:sort`, queryParams.order)
       .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order) //TODO !!
       .limit(queryParams.pageSize)
-      .offset(queryParams.skip)
-      .getMany();
+      .offset(queryParams.skip);
+
+    const totalCount = await queryBuilder.getCount();
+    const blogs = await queryBuilder.getMany();
 
     const blogResponseDto = blogs.map((item) => new BlogViewModel(item));
-    return new PageDto(blogResponseDto, queryParams);
+    return new PageDto(blogResponseDto, queryParams, totalCount);
   }
 }

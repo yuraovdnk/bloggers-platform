@@ -17,8 +17,8 @@ export class PostsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    const posts: PostRawQuery[] = await this.postEntity
-      .createQueryBuilder('post')
+    const queryBuilder = this.postEntity.createQueryBuilder('post');
+    queryBuilder
       .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
@@ -60,11 +60,13 @@ export class PostsQueryRepository {
       .addOrderBy(`:orderField`, queryParams.order)
       .setParameter('orderField', `post.${queryParams.sortByField(SortFieldsPostModel)}`)
       .limit(queryParams.pageSize)
-      .offset(queryParams.skip)
-      .getRawMany();
+      .offset(queryParams.skip);
+
+    const totalCount = await queryBuilder.getCount();
+    const posts: PostRawQuery[] = await queryBuilder.getRawMany();
 
     const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
-    return new PageDto(postViewDto, queryParams);
+    return new PageDto(postViewDto, queryParams, totalCount);
   }
 
   async findById(postId: string, userId?: string): Promise<PostViewModel> {
@@ -116,13 +118,14 @@ export class PostsQueryRepository {
     return postViewDto[0];
   }
 
-  async findByBlogId(
+  async findAllByBlogId(
     queryParams: QueryParamsDto,
     blogId: string,
     userId: string = null,
   ): Promise<PageDto<PostViewModel>> {
-    const posts: PostRawQuery[] = await this.postEntity
-      .createQueryBuilder('post')
+    const queryBuilder = this.postEntity.createQueryBuilder('post');
+
+    queryBuilder
       .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
       .where('post.blogId = :blogId', { blogId })
       .leftJoin('post.blog', 'blog')
@@ -164,13 +167,13 @@ export class PostsQueryRepository {
       .addOrderBy(`:orderField`, queryParams.order) //TODO !!!
       .setParameter('orderField', `post.${queryParams.sortByField(SortFieldsPostModel)}`)
       .limit(queryParams.pageSize)
-      .offset(queryParams.skip)
-      .getRawMany();
+      .offset(queryParams.skip);
 
-    if (!posts.length) {
-      return null;
-    }
-    const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
-    return new PageDto(postViewDto, queryParams);
+    const totalCount = await queryBuilder.getCount();
+    const posts: PostRawQuery[] = await queryBuilder.getRawMany();
+
+    const postsViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
+
+    return new PageDto(postsViewDto, queryParams, totalCount);
   }
 }

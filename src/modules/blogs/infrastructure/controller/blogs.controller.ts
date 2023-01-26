@@ -95,11 +95,9 @@ export class BlogsController {
     @Query() queryParams: QueryParamsDto,
     //@CurrentUser() userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    const posts = await this.postsQueryRepository.findByBlogId(queryParams, blogId);
-    if (!posts) {
-      throw new NotFoundException();
-    }
-    return posts;
+    const blog = await this.blogsQueryRepository.findById(blogId);
+    if (!blog) throw new NotFoundException();
+    return this.postsQueryRepository.findAllByBlogId(queryParams, blogId);
   }
 
   // @UseGuards(JwtExtractGuard)
