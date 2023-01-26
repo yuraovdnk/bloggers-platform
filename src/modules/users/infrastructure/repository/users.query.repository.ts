@@ -20,9 +20,9 @@ export class UsersQueryRepository {
     return user;
   }
 
-  async findAll(queryParams: QueryParamsDto): Promise<PageDto<User>> {
-    const queryBuilder = await this.userEntity.createQueryBuilder('user');
-    queryBuilder
+  async findAll(queryParams: QueryParamsDto) {
+    const [users, totalCount] = await this.userEntity
+      .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt'])
       .where('user.login ~~* :loginTerm and user.email ~~* :emailTerm', {
         loginTerm: `%${queryParams.searchLoginTerm}%`,
@@ -30,12 +30,9 @@ export class UsersQueryRepository {
       })
       .orderBy(`user.${queryParams.sortByField(SortFieldUserModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
-      .offset(queryParams.skip);
+      .offset(queryParams.skip)
+      .getManyAndCount();
 
-    const totalCount = await queryBuilder.getCount();
-
-    const users = await queryBuilder.getMany();
-
-    return new PageDto(users, queryParams, users.length);
+    return new PageDto(users, queryParams, totalCount);
   }
 }

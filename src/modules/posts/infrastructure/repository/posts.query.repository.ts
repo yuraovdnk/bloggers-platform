@@ -62,9 +62,8 @@ export class PostsQueryRepository {
       .offset(queryParams.skip);
 
     const totalCount = await queryBuilder.getCount();
-    console.log(totalCount);
+
     const posts: PostRawQuery[] = await queryBuilder.getRawMany();
-    console.log(posts.length);
 
     const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
     return new PageDto(postViewDto, queryParams, totalCount);
