@@ -38,6 +38,7 @@ export class UsersController {
   }
 
   @Delete(':userId')
+  @HttpCode(204)
   async removeUser(@Param('userId', ParseUUIDPipe) userId: string) {
     await this.commandBus.execute(new RemoveUserCommand(userId));
   }
