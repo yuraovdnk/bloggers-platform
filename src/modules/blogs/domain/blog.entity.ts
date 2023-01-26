@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../../../common/utils/base.entity';
 
 @Entity('Blogs')
 export class Blog extends CommonEntity {
-  @Column({ length: 15 })
+  @Column({ length: 15, collation: 'C' })
   name: string;
 
   @Column({ length: 500 })
