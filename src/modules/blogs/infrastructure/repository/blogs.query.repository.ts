@@ -22,10 +22,11 @@ export class BlogsQueryRepository {
   }
 
   async findAll(queryParams: QueryParamsDto): Promise<PageDto<BlogViewModel>> {
-    const queryBuilder = await this.blogEntity.createQueryBuilder('b');
+    const queryBuilder = this.blogEntity.createQueryBuilder('b');
+
     queryBuilder
       .select('b')
-      .where('b.name like :term', { term: `%${queryParams.searchNameTerm}%` })
+      .where('b.name ~~* :term', { term: `%${queryParams.searchNameTerm}%` })
       .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
