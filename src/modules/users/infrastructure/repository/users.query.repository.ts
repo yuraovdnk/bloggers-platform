@@ -24,7 +24,7 @@ export class UsersQueryRepository {
     const queryBuilder = await this.userEntity.createQueryBuilder('user');
     queryBuilder
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt'])
-      .where('user.login like :loginTerm and user.email like :emailTerm', {
+      .where('user.login ~~* :loginTerm and user.email ~~* :emailTerm', {
         loginTerm: `%${queryParams.searchLoginTerm}%`,
         emailTerm: `%${queryParams.searchEmailTerm}%`,
       })

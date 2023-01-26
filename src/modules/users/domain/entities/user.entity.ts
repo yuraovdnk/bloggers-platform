@@ -1,17 +1,16 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Comment } from '../../../comments/domain/comment.entity';
 
 @Entity('Users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'varchar', collation: 'C' })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar', collation: 'C' })
   login: string;
 
   @Column()
