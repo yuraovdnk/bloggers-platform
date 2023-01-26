@@ -21,10 +21,11 @@ export class UsersQueryRepository {
   }
 
   async findAll(queryParams: QueryParamsDto) {
+    console.log(queryParams);
     const [users, totalCount] = await this.userEntity
       .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt'])
-      .where('user.login ~~* :loginTerm and user.email ~~* :emailTerm', {
+      .where(`user.login ~~* :loginTerm or user.email ~~* :emailTerm`, {
         loginTerm: `%${queryParams.searchLoginTerm}%`,
         emailTerm: `%${queryParams.searchEmailTerm}%`,
       })
