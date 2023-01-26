@@ -33,8 +33,9 @@ export class UsersQueryRepository {
       .offset(queryParams.skip);
 
     const totalCount = await queryBuilder.getCount();
+
     const users = await queryBuilder.getMany();
 
-    return new PageDto(users, queryParams, totalCount);
+    return new PageDto(users, queryParams, users.length);
   }
 }
