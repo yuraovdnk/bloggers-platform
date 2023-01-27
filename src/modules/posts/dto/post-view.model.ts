@@ -25,7 +25,7 @@ export class PostViewModel {
     this.shortDescription = model.post_shortDescription;
     this.content = model.post_content;
     this.blogId = model.post_blogId;
-    this.blogName = model.post_blogName;
+    this.blogName = model.post_blogName || model.blogName;
     this.createdAt = model.post_createdAt;
     this.extendedLikesInfo = {
       likesCount: model.post_likesCount ?? 0,

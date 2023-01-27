@@ -6,10 +6,11 @@ export type DbPostDto = {
 };
 
 export class SortFieldsPostModel {
-  title = 'title';
-  shortDescription = 'shortDescription';
-  content = 'content';
-  createdAt = 'createdAt';
+  title = 'post.title';
+  shortDescription = 'post.shortDescription';
+  content = 'post.content';
+  blogName = 'blogName';
+  createdAt = 'post.createdAt';
 }
 
 export type PostRawQuery = {

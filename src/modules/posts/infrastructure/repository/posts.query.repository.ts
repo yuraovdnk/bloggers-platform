@@ -8,6 +8,7 @@ import { PostMapper } from './post.mapper';
 import { PageDto } from '../../../../common/utils/PageDto';
 import { PostViewModel } from '../../dto/post-view.model';
 import { PostRawQuery, SortFieldsPostModel } from '../../typing/posts.type';
+import { log } from 'util';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -17,13 +18,11 @@ export class PostsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    console.log(queryParams);
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
-      .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
+      .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
-        //TODO leftJoin id not null
         (subQuery) => {
           return subQuery
             .select([
@@ -58,12 +57,11 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .addOrderBy(`post.${queryParams.sortByField(SortFieldsPostModel)}`, queryParams.order)
+      .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 
     const totalCount = await queryBuilder.getCount();
-
     const posts: PostRawQuery[] = await queryBuilder.getRawMany();
 
     const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
@@ -165,7 +163,7 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .addOrderBy(`post.${queryParams.sortByField(SortFieldsPostModel)}`, queryParams.order)
+      .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
 
