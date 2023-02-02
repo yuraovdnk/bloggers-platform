@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   HttpCode,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { CommandBus } from '@nestjs/cqrs';
@@ -15,6 +16,7 @@ import { CreateUserCommand } from '../../application/use-cases/createUser';
 import { UsersQueryRepository } from '../repository/users.query.repository';
 import { QueryParamsDto } from '../../../../common/pipes/query-params.dto';
 import { RemoveUserCommand } from '../../application/use-cases/removeUser';
+import { BasicAuthGuard } from '../../../auth/strategies/basic.strategy';
 
 @Controller('users')
 export class UsersController {
@@ -23,6 +25,7 @@ export class UsersController {
     private commandBus: CommandBus,
   ) {}
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(201)
   async create(@Body() createUserDto: CreateUserDto) {
@@ -31,12 +34,13 @@ export class UsersController {
     );
     return this.usersQueryRepository.findById(createdUserId);
   }
-
+  @UseGuards(BasicAuthGuard)
   @Get()
   findAllUsers(@Query() queryParams: QueryParamsDto) {
     return this.usersQueryRepository.findAll(queryParams);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':userId')
   @HttpCode(204)
   async removeUser(@Param('userId', ParseUUIDPipe) userId: string) {
