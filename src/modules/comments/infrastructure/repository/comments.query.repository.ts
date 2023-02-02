@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from '../../domain/comment.entity';
 import { Repository } from 'typeorm';
@@ -6,7 +6,7 @@ import { Like } from '../../../likes/domain/like.entity';
 import { CommentViewModel } from '../../dto/comment-view.model';
 import { QueryParamsDto } from '../../../../common/pipes/query-params.dto';
 import { PageDto } from '../../../../common/utils/PageDto';
-import { SortCommentFields } from '../../typing/comments.type';
+import { RawQueryComment, SortCommentFields } from '../../typing/comments.type';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -42,8 +42,7 @@ export class CommentsQueryRepository {
       .where('comment.id = :commentId', { commentId })
       .getRawOne();
 
-    if (!comment) return null;
-    return new CommentViewModel(comment);
+    return comment ? new CommentViewModel(comment) : null;
   }
 
   async findAllByPostId(
@@ -51,8 +50,9 @@ export class CommentsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string = null,
   ): Promise<PageDto<CommentViewModel>> {
-    const comments: Comment[] = await this.commentEntity
-      .createQueryBuilder('comment')
+    const queryBuilder = await this.commentEntity.createQueryBuilder('comment');
+
+    queryBuilder
       .select(['comment', 'likes'])
       .leftJoin('comment.user', 'user')
       .addSelect('user.login')
@@ -78,10 +78,11 @@ export class CommentsQueryRepository {
           .andWhere('li.userId = :userId', { userId });
       })
       .where('comment.postId = :postId', { postId })
-      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`)
-      .getRawMany();
+      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`);
 
+    const totalCount = await queryBuilder.getCount();
+    const comments: RawQueryComment[] = await queryBuilder.getRawMany();
     const mappedComments: CommentViewModel[] = comments.map((i) => new CommentViewModel(i));
-    return new PageDto<CommentViewModel>(mappedComments, queryParams);
+    return new PageDto<CommentViewModel>(mappedComments, queryParams, totalCount);
   }
 }

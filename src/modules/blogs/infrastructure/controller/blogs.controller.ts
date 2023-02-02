@@ -38,11 +38,13 @@ export class BlogsController {
     private postsQueryRepository: PostsQueryRepository,
   ) {}
 
+  //get all blogs
   @Get()
   async getAllBlogs(@Query() queryParams: QueryParamsDto): Promise<PageDto<BlogViewModel>> {
     return this.blogsQueryRepository.findAll(queryParams);
   }
 
+  //get blog by id
   @Get(':blogId')
   async getBlogById(@Param('blogId', ParseUUIDPipe) blogId: string): Promise<BlogViewModel> {
     const blog = await this.blogsQueryRepository.findById(blogId);
@@ -52,14 +54,16 @@ export class BlogsController {
     return blog;
   }
 
-  //@UseGuards(BasicAuthGuard)
+  //create blog
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(@Body() createBlog: CreateBlogDto): Promise<BlogViewModel> {
     const createdBlogId = await this.commandBus.execute(new CreateBlogCommand(createBlog));
     return this.blogsQueryRepository.findById(createdBlogId);
   }
 
-  //@UseGuards(BasicAuthGuard)
+  //update blog
+  @UseGuards(BasicAuthGuard)
   @Put(':blogId')
   @HttpCode(204)
   async updateBlog(
@@ -69,14 +73,16 @@ export class BlogsController {
     return this.commandBus.execute(new UpdateBlogCommand(blogId, updateBlogDto));
   }
 
-  //@UseGuards(BasicAuthGuard)
+  //delete blog
+  @UseGuards(BasicAuthGuard)
   @Delete(':blogId')
   @HttpCode(204)
   async deleteBlog(@Param('blogId', ParseUUIDPipe) blogId: string): Promise<boolean> {
     return this.commandBus.execute(new DeleteBlogCommand(blogId));
   }
 
-  //@UseGuards(BasicAuthGuard)
+  //create post for blog
+  @UseGuards(BasicAuthGuard)
   @Post(':blogId/posts')
   async createPostForBlog(
     @Param('blogId', ParseUUIDPipe) blogId: string,
@@ -88,25 +94,16 @@ export class BlogsController {
     return this.postsQueryRepository.findById(createdPostId);
   }
 
-  //@UseGuards(JwtExtractGuard)
+  //get all posts by blogId
+  @UseGuards(JwtExtractGuard)
   @Get(':blogId/posts')
   async getPostsByBlogId(
     @Param('blogId', ParseUUIDPipe) blogId: string,
     @Query() queryParams: QueryParamsDto,
-    //@CurrentUser() userId: string,
+    @CurrentUser() userId: string,
   ): Promise<PageDto<PostViewModel>> {
     const blog = await this.blogsQueryRepository.findById(blogId);
     if (!blog) throw new NotFoundException();
-    return this.postsQueryRepository.findAllByBlogId(queryParams, blogId);
+    return this.postsQueryRepository.findAllByBlogId(queryParams, blogId, userId);
   }
-
-  // @UseGuards(JwtExtractGuard)
-  // @Get(':blogId/posts')
-  // async getPostsByBlogId(
-  //     @Param('blogId', ParseUUIDPipe) blogId: string,
-  //     @Query() queryParams: QueryParamsDto,
-  //     @CurrentUser() userId: string,
-  // ): Promise<PageDto<PostViewModel>> {
-  //   return this.postsQueryRepository.findByBlogId(queryParams, blogId, userId);
-  // }
 }

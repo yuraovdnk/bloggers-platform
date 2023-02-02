@@ -1,20 +1,26 @@
+import { RawQueryComment } from '../typing/comments.type';
+
 export class CommentViewModel {
   id: string;
   content: string;
-  userId: string;
-  userLogin: string;
-  createdAt: string;
+  commentatorInfo: {
+    userId: string;
+    userLogin: string;
+  };
+  createdAt: Date;
   likesInfo: {
-    likesCount: string;
-    dislikesCount: string;
+    likesCount: number;
+    dislikesCount: number;
     myStatus: string;
   };
-  constructor(item: any) {
+  constructor(item: RawQueryComment | any) {
     this.id = item.comment_id;
     this.content = item.comment_content;
-    this.userId = item.comment_userId;
-    this.userLogin = item.user_login;
     this.createdAt = item.comment_createdAt;
+    this.commentatorInfo = {
+      userId: item.comment_userId,
+      userLogin: item.user_login,
+    };
     this.likesInfo = {
       likesCount: item.likesCount ?? 0,
       dislikesCount: item.dislikesCount ?? 0,

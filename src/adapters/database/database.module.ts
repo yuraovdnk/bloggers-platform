@@ -26,7 +26,7 @@ const configModule = ConfigModule.forRoot({
         url:
           process.env.NODE_ENV === 'production'
             ? configService.get<string>('db.postgresUriProduction')
-            : configService.get<string>('db.postgresUriProduction'),
+            : configService.get<string>('db.postgresUriDev'),
       }),
 
       inject: [ConfigService],

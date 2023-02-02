@@ -8,7 +8,6 @@ import { PostMapper } from './post.mapper';
 import { PageDto } from '../../../../common/utils/PageDto';
 import { PostViewModel } from '../../dto/post-view.model';
 import { PostRawQuery, SortFieldsPostModel } from '../../typing/posts.type';
-import { log } from 'util';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -60,7 +59,6 @@ export class PostsQueryRepository {
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
-
     const totalCount = await queryBuilder.getCount();
     const posts: PostRawQuery[] = await queryBuilder.getRawMany();
 
