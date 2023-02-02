@@ -1,20 +1,19 @@
 import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty()
-  @IsString()
   @MinLength(3)
   @MaxLength(10)
+  @IsString()
+  @IsNotEmpty({ message: 'login is required' })
   login: string;
 
-  @IsNotEmpty()
-  @IsString()
   @IsEmail()
+  @IsNotEmpty({ message: 'email is required' })
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
   @MinLength(6)
   @MaxLength(20)
+  @IsString()
+  @IsNotEmpty()
   password: string;
 }

@@ -1,4 +1,4 @@
-export type UserInputType = {
+export type UserDbDto = {
   login: string;
   email: string;
   passwordHash: string;

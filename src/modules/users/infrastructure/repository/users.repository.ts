@@ -2,13 +2,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { UserInputType } from '../../typing/user.types';
+import { UserDbDto } from '../../typing/user.types';
 
 @Injectable()
 export class UsersRepository {
   constructor(@InjectRepository(User) private userEntity: Repository<User>) {}
 
-  async create(newUser: UserInputType): Promise<User> {
+  async create(newUser: UserDbDto): Promise<User> {
     const user = new User();
     user.login = newUser.login;
     user.email = newUser.email;

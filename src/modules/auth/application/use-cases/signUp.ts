@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import { add } from 'date-fns';
 import { EmailService } from '../../../../adapters/notification/email.service';
-import { UserInputType } from '../../../users/typing/user.types';
+import { UserDbDto } from '../../../users/typing/user.types';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 
 export class SignUpCommand {
@@ -25,12 +25,13 @@ export class SignUpUseCase implements ICommandHandler<SignUpCommand> {
       this.usersRepository.findByEmail(command.registrationDto.email),
       this.usersRepository.findByLogin(command.registrationDto.login),
     ]);
-    if (userByEmail || userByLogin) {
-      throw new BadRequestException(mapErrors('user is exist', 'login or email'));
-    }
+    if (userByEmail) throw new BadRequestException(mapErrors('user is exist', 'email'));
+
+    if (userByLogin) throw new BadRequestException(mapErrors('user is exist', 'login'));
+
     const passwordHash = await bcrypt.hash(command.registrationDto.password, 10);
 
-    const newUser: UserInputType = {
+    const newUser: UserDbDto = {
       login: command.registrationDto.login,
       email: command.registrationDto.email,
       passwordHash,
