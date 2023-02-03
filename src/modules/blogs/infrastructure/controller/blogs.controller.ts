@@ -58,6 +58,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(@Body() createBlog: CreateBlogDto): Promise<BlogViewModel> {
+    console.log(createBlog, 'test');
     const createdBlogId = await this.commandBus.execute(new CreateBlogCommand(createBlog));
     return this.blogsQueryRepository.findById(createdBlogId);
   }
