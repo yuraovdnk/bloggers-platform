@@ -17,6 +17,7 @@ import { Like } from '../likes/domain/like.entity';
 import { SetLikeStatusForPostUseCase } from './application/use-cases/commands/set-likeStatus-for-post.use-case';
 import { LikesRepository } from '../likes/infrastructure/likes.repository';
 import { CommentModule } from '../comments/comment.module';
+import { IsExistBlog } from '../../common/validators/isExistBlog';
 
 const useCases = [
   CreatePostUseCase,
@@ -41,6 +42,7 @@ const useCases = [
     PostsQueryRepository,
     JwtExtractGuard,
     JwtService,
+    IsExistBlog,
   ],
   exports: [PostsRepository, PostsQueryRepository],
 })

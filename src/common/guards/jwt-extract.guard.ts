@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
+import { log } from 'util';
 
 @Injectable()
 export class JwtExtractGuard implements CanActivate {
@@ -23,6 +24,7 @@ export class JwtExtractGuard implements CanActivate {
       request.user = { id: null };
       return true;
     }
+
     const token: string = request.headers.authorization.split(' ')[1];
     let userId = null;
     try {
@@ -31,7 +33,8 @@ export class JwtExtractGuard implements CanActivate {
       });
       userId = result.userId;
     } catch (e) {
-      throw new UnauthorizedException();
+      request.user = { id: null };
+      return true;
     }
 
     const user = await this.usersRepo.findById(userId);

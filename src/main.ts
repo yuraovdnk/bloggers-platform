@@ -4,10 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { mapValidationErrors } from './exceptions/mapErrors';
 import { ErrorExceptionFilter, HttpExceptionFilter } from './exceptions/exception.filter';
+import { useContainer } from 'class-validator';
 
 export const createApp = async (app) => {
   app.enableCors();
   app.use(cookieParser());
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: true,

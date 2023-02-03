@@ -62,7 +62,7 @@ export class PostsController {
     }
     return post;
   }
-
+  //create post
   @Post()
   async createPost(@Body() createPostDto: CreatePostDto): Promise<PostViewModel> {
     const createdPostId = await this.commandBus.execute(
