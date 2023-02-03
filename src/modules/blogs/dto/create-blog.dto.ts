@@ -18,7 +18,7 @@ export class CreateBlogDto {
   @MinLength(1)
   @MaxLength(15)
   @IsString()
-  @NotContains(' ')
+  //@NotContains(' ')
   @IsNotEmpty()
   name: string;
 
