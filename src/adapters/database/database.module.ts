@@ -19,7 +19,6 @@ const configModule = ConfigModule.forRoot({
         synchronize: true,
         extra: {
           poolSize: 4,
-          max: 4,
         },
         url:
           process.env.NODE_ENV === 'production'
