@@ -4,6 +4,7 @@ import { BadRequestException, InternalServerErrorException } from '@nestjs/commo
 import { v4 as uuid } from 'uuid';
 import { add } from 'date-fns';
 import { EmailService } from '../../../../adapters/notification/email.service';
+import { mapErrors } from '../../../../exceptions/mapErrors';
 
 export class ResendConfirmCodeCommand {
   constructor(public readonly email: string) {}
@@ -18,9 +19,10 @@ export class ResendConfirmCodeUseCase implements ICommandHandler<ResendConfirmCo
 
   async execute(command: ResendConfirmCodeCommand): Promise<any> {
     const user = await this.usersRepository.findByEmail(command.email);
-    if (user.isConfirmedEmail) {
-      throw new BadRequestException();
+    if (!user || user.isConfirmedEmail) {
+      throw new BadRequestException(mapErrors('Something went wrong', 'email'));
     }
+
     const newConfirmCode = uuid();
     const expirationConfirmCode = add(new Date(), {
       hours: 1,

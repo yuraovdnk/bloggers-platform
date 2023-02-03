@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/repository/users.repository';
 import { BadRequestException } from '@nestjs/common';
+import { mapErrors } from '../../../../exceptions/mapErrors';
 
 export class ConfirmEmailCommand {
   constructor(public readonly confirmCode: string) {}
@@ -12,7 +13,7 @@ export class ConfirmEmailUseCase implements ICommandHandler<ConfirmEmailCommand>
   async execute(command: ConfirmEmailCommand): Promise<any> {
     const user = await this.usersRepository.findByConfirmCode(command.confirmCode);
     if (!user) {
-      throw new BadRequestException();
+      throw new BadRequestException(mapErrors('Code is incorrect', 'code'));
     }
     user.confirmEmail(command.confirmCode);
     await this.usersRepository.save(user);
