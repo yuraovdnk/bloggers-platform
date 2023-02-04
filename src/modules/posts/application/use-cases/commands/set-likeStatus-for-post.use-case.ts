@@ -31,6 +31,7 @@ export class SetLikeStatusForPostUseCase
     const like = await this.likesRepository.findByParentAndUserId(
       command.userId,
       command.postId,
+      command.parentType,
     );
 
     //If not exist, then create LikeEntity (create new like with default status "Like")

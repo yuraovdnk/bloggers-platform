@@ -30,6 +30,7 @@ export class SetLikeStatusForCommentUseCase
     const like = await this.likeRepository.findByParentAndUserId(
       command.userId,
       command.commentId,
+      command.parentType,
     );
 
     if (!like) {

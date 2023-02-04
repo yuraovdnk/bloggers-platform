@@ -24,12 +24,17 @@ export class LikesRepository {
     await this.likeEntity.remove(entity);
   }
 
-  async findByParentAndUserId(userId: string, parentId: string): Promise<Like> {
+  async findByParentAndUserId(
+    userId: string,
+    parentId: string,
+    parentType: string,
+  ): Promise<Like> {
     const like = await this.likeEntity
       .createQueryBuilder('l')
       .select('l')
       .where('l.parentId = :parentId', { parentId })
       .andWhere('l.userId = :userId', { userId })
+      .andWhere('l.parentType = :parentType', { parentType })
       .getOne();
     return like;
   }
