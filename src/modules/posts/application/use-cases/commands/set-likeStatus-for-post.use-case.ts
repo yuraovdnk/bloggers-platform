@@ -41,10 +41,11 @@ export class SetLikeStatusForPostUseCase
           command.postId,
           command.userId,
           command.parentType,
+          command.likeStatus,
         );
         return true;
       } catch (e) {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(e);
       }
     }
     if (command.likeStatus === StatusLike.None) {

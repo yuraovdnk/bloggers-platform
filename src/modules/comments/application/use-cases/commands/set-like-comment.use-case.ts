@@ -38,6 +38,7 @@ export class SetLikeStatusForCommentUseCase
         command.commentId,
         command.userId,
         command.parentType,
+        command.likeStatus,
       );
       return true;
     }

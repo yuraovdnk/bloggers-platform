@@ -21,7 +21,7 @@ export class Like {
   @Column({ type: 'varchar' })
   parentType: string;
 
-  @Column({ type: 'enum', enum: StatusLike, default: 'Like' })
+  @Column({ type: 'enum', enum: StatusLike })
   likeStatus: StatusLike;
 
   @Column('uuid')
