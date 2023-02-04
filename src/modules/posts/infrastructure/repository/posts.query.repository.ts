@@ -19,7 +19,7 @@ export class PostsQueryRepository {
   ): Promise<PageDto<PostViewModel>> {
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
-      .select(['post', 'blog.name as "post_blogName"'])
+      .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
         (subQuery) => {
@@ -73,7 +73,6 @@ export class PostsQueryRepository {
       .where('post.id = :postId', { postId })
       .leftJoin('post.blog', 'blog')
       .leftJoin(
-        //TODO leftJoin id not null
         (subQuery) => {
           return subQuery
             .select([
@@ -108,7 +107,6 @@ export class PostsQueryRepository {
         '"likes"."l_parentId" = post.id',
       )
       .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-
       .getRawMany();
 
     const postViewDto: PostViewModel[] = PostMapper.mapLikes(post);
