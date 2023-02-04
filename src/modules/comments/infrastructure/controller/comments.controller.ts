@@ -26,7 +26,7 @@ import { StatusLike } from '../../../../common/types/commonEnums';
 export class CommentsController {
   constructor(
     private commandBus: CommandBus,
-    private commentsQueryRepo: CommentsQueryRepository,
+    private commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   //Update comment
@@ -61,7 +61,7 @@ export class CommentsController {
     @Param('commentId', ParseUUIDPipe) commentId: string,
     @CurrentUser() userId: string,
   ) {
-    const comment = await this.commentsQueryRepo.findById(commentId, userId);
+    const comment = await this.commentsQueryRepository.findById(commentId, userId);
     if (!comment) {
       throw new NotFoundException();
     }

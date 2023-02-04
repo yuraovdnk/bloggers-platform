@@ -61,8 +61,8 @@ export class CommentsQueryRepository {
           return subQuery
             .select([
               'l."parentId"',
-              `coalesce( COUNT(*) FILTER( where l."likeStatus" = 'Like'),0)::int AS "likesCount" ,
-               COUNT(*) FILTER( where l."likeStatus" = 'Dislike' IS NULL)::int AS "dislikesCount"`,
+              `COUNT(*) FILTER( where l."likeStatus" = 'Like')::int AS "likesCount" ,
+               COUNT(*) FILTER( where l."likeStatus" = 'Dislike')::int AS "dislikesCount"`,
             ])
             .from(Like, 'l')
             .groupBy('l."parentId"');
