@@ -89,6 +89,7 @@ export class BlogsController {
     @Param('blogId', ParseUUIDPipe) blogId: string,
     @Body() createPostDto: CreatePostForBlogDto,
   ): Promise<PostViewModel> {
+    console.log(createPostDto);
     const createdPostId = await this.commandBus.execute(
       new CreatePostForBlogCommand(blogId, createPostDto),
     );

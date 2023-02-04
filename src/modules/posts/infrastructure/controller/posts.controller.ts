@@ -32,6 +32,7 @@ import { CommentsQueryRepository } from '../../../comments/infrastructure/reposi
 import { PageDto } from '../../../../common/utils/PageDto';
 import { PostViewModel } from '../../dto/post-view.model';
 import { CommentViewModel } from '../../../comments/dto/comment-view.model';
+import { BasicAuthGuard } from '../../../auth/strategies/basic.strategy';
 
 @Controller('posts')
 export class PostsController {
@@ -40,7 +41,7 @@ export class PostsController {
     private commentsQueryRepository: CommentsQueryRepository,
     private commandBus: CommandBus,
   ) {}
-
+  //get posts
   @UseGuards(JwtExtractGuard)
   @Get()
   async getPosts(
@@ -50,6 +51,7 @@ export class PostsController {
     return this.postsQueryRepository.findAll(queryParams, userId);
   }
 
+  //get post by id
   @UseGuards(JwtExtractGuard)
   @Get(':postId')
   async getPostById(
@@ -62,7 +64,9 @@ export class PostsController {
     }
     return post;
   }
+
   //create post
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createPost(@Body() createPostDto: CreatePostDto): Promise<PostViewModel> {
     const createdPostId = await this.commandBus.execute(
@@ -71,6 +75,8 @@ export class PostsController {
     return this.postsQueryRepository.findById(createdPostId);
   }
 
+  //update post
+  @UseGuards(BasicAuthGuard)
   @Put(':postId')
   @HttpCode(204)
   async updatePost(
@@ -80,13 +86,16 @@ export class PostsController {
     return this.commandBus.execute(new UpdatePostCommand(postId, updatePostDto));
   }
 
+  //delete post
   @Delete(':postId')
   @HttpCode(204)
   async deletePost(@Param('postId', ParseUUIDPipe) postId: string): Promise<boolean> {
     return this.commandBus.execute(new DeletePostCommand(postId));
   }
 
+  //create comment for post
   @Post(':postId/comments')
+  @UseGuards(BasicAuthGuard)
   @UseGuards(JwtGuard)
   async createCommentForPost(
     @Param('postId', ParseUUIDPipe) postId: string,
@@ -99,6 +108,7 @@ export class PostsController {
     return this.commentsQueryRepository.findById(createdCommentId, userId);
   }
 
+  //get comments for post
   @UseGuards(JwtExtractGuard)
   @Get(':postId/comments')
   async getCommentsByPostId(
@@ -109,6 +119,7 @@ export class PostsController {
     return this.commentsQueryRepository.findAllByPostId(postId, queryParams, userId);
   }
 
+  //like for post
   @UseGuards(JwtGuard)
   @Put(':postId/like-status')
   @HttpCode(204)
