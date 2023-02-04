@@ -116,7 +116,13 @@ export class PostsController {
     @Query() queryParams: QueryParamsDto,
     @CurrentUser() userId: string,
   ): Promise<PageDto<CommentViewModel>> {
-    return this.commentsQueryRepository.findAllByPostId(postId, queryParams, userId);
+    const comments = await this.commentsQueryRepository.findAllByPostId(
+      postId,
+      queryParams,
+      userId,
+    );
+    if (!comments) throw new NotFoundException();
+    return comments;
   }
 
   //like for post

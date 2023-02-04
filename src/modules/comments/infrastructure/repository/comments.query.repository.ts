@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from '../../domain/comment.entity';
 import { Repository } from 'typeorm';
@@ -49,7 +49,7 @@ export class CommentsQueryRepository {
     postId: string,
     queryParams: QueryParamsDto,
     userId: string = null,
-  ): Promise<PageDto<CommentViewModel>> {
+  ): Promise<PageDto<CommentViewModel> | null> {
     const queryBuilder = await this.commentEntity.createQueryBuilder('comment');
 
     queryBuilder
@@ -78,10 +78,13 @@ export class CommentsQueryRepository {
           .andWhere('li.userId = :userId', { userId });
       })
       .where('comment.postId = :postId', { postId })
-      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`);
+      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order);
 
     const totalCount = await queryBuilder.getCount();
     const comments: RawQueryComment[] = await queryBuilder.getRawMany();
+    if (!comments.length) {
+      return null;
+    }
     const mappedComments: CommentViewModel[] = comments.map((i) => new CommentViewModel(i));
     return new PageDto<CommentViewModel>(mappedComments, queryParams, totalCount);
   }
