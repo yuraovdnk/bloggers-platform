@@ -1,24 +1,18 @@
-import {
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-  NotContains,
-} from 'class-validator';
+import { IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 export class CreateBlogDto {
   @MinLength(1)
   @MaxLength(500)
   @IsString()
-  //@NotContains(' ')
+  @Transform(({ value }: TransformFnParams) => value.trim())
   @IsNotEmpty()
   description: string;
 
   @MinLength(1)
   @MaxLength(15)
   @IsString()
-  //@NotContains(' ')
+  @Transform(({ value }: TransformFnParams) => value.trim())
   @IsNotEmpty()
   name: string;
 
