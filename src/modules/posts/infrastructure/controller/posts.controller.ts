@@ -87,6 +87,7 @@ export class PostsController {
   }
 
   //delete post
+  @UseGuards(BasicAuthGuard)
   @Delete(':postId')
   @HttpCode(204)
   async deletePost(@Param('postId', ParseUUIDPipe) postId: string): Promise<boolean> {
@@ -94,9 +95,8 @@ export class PostsController {
   }
 
   //create comment for post
-  @Post(':postId/comments')
-  @UseGuards(BasicAuthGuard)
   @UseGuards(JwtGuard)
+  @Post(':postId/comments')
   async createCommentForPost(
     @Param('postId', ParseUUIDPipe) postId: string,
     @Body() createCommentDto: CreateCommentDto,

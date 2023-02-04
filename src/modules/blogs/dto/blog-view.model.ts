@@ -4,6 +4,7 @@ export class BlogViewModel {
   description: string;
   websiteUrl: string;
   createdAt: Date;
+  isMembership: boolean;
 
   constructor(model: any) {
     this.id = model.id;
@@ -11,5 +12,6 @@ export class BlogViewModel {
     this.description = model.description;
     this.websiteUrl = model.websiteUrl;
     this.createdAt = model.createdAt;
+    this.isMembership = false;
   }
 }
