@@ -42,7 +42,7 @@ export class PostsQueryRepository {
               .select([
                 'l.userId as "userId"',
                 'l.addedAt as "addedAt"',
-                'user.login as "userLogin"',
+                'user.login as "login"',
               ])
               .from(Like, 'l')
               .where(
@@ -95,7 +95,7 @@ export class PostsQueryRepository {
               .select([
                 'l.userId as "userId"',
                 'l.addedAt as "addedAt"',
-                'user.login as "userLogin"',
+                'user.login as "login"',
               ])
               .from(Like, 'l')
               .where(
@@ -148,7 +148,7 @@ export class PostsQueryRepository {
               .select([
                 'l.userId as "userId"',
                 'l.addedAt as "addedAt"',
-                'user.login as "userLogin"',
+                'user.login as "login"',
               ])
               .from(Like, 'l')
               .where(
