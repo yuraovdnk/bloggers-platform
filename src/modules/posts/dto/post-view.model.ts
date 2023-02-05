@@ -1,8 +1,4 @@
-type LikesInfoType = {
-  userId: string;
-  login: string;
-  addedAt: string;
-};
+import { PostRawQuery } from '../typing/posts.type';
 
 export class PostViewModel {
   id: string;
@@ -16,22 +12,22 @@ export class PostViewModel {
     likesCount: number;
     dislikesCount: number;
     myStatus: string;
-    newestLikes?: LikesInfoType[];
+    newestLikes: any[];
   };
 
-  constructor(model: any) {
+  constructor(model: PostRawQuery) {
     this.id = model.post_id;
     this.title = model.post_title;
     this.shortDescription = model.post_shortDescription;
     this.content = model.post_content;
     this.blogId = model.post_blogId;
-    this.blogName = model.post_blogName || model.blogName;
+    this.blogName = model.post_blogName;
     this.createdAt = model.post_createdAt;
     this.extendedLikesInfo = {
-      likesCount: model.post_likesCount ?? 0,
-      dislikesCount: model.post_dislikesCount ?? 0,
+      likesCount: model.post_likesCount,
+      dislikesCount: model.post_dislikesCount,
       myStatus: model.post_myStatus ?? 'None',
-      newestLikes: [],
+      newestLikes: [...model.post_newestLikes],
     };
   }
 }

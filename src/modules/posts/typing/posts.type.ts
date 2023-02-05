@@ -20,16 +20,9 @@ export type PostRawQuery = {
   post_shortDescription: string;
   post_content: string;
   post_blogId: string;
-  parentId: string;
+  post_blogName: string;
+  post_newestLikes: any[];
   post_likesCount: number;
   post_dislikesCount: number;
-  l_id: string;
-  l_parentId: string;
-  l_parentType: string;
-  l_likeStatus: string;
-  l_userId: string;
-  l_addedAt: Date;
-  l_userLogin: string;
-  post_blogName: string;
   post_myStatus: string;
 };

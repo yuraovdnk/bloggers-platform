@@ -48,7 +48,7 @@ export class PostsController {
     @Query() queryParams: QueryParamsDto,
     @CurrentUser() userId: string,
   ): Promise<PageDto<PostViewModel>> {
-    return this.postsQueryRepository.findAll(queryParams, userId);
+    return this.postsQueryRepository.getAll(queryParams, userId);
   }
 
   //get post by id
@@ -58,7 +58,7 @@ export class PostsController {
     @Param('postId', ParseUUIDPipe) postId: string,
     @CurrentUser() userId: string,
   ): Promise<PostViewModel> {
-    const post = await this.postsQueryRepository.findById(postId, userId);
+    const post = await this.postsQueryRepository.getById(postId, userId);
     if (!post) {
       throw new NotFoundException();
     }
@@ -72,7 +72,7 @@ export class PostsController {
     const createdPostId = await this.commandBus.execute(
       new CreatePostCommand(createPostDto),
     );
-    return this.postsQueryRepository.findById(createdPostId);
+    return this.postsQueryRepository.getById(createdPostId);
   }
 
   //update post

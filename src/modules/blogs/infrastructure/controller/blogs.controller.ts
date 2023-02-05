@@ -93,7 +93,7 @@ export class BlogsController {
     const createdPostId = await this.commandBus.execute(
       new CreatePostForBlogCommand(blogId, createPostDto),
     );
-    return this.postsQueryRepository.findById(createdPostId);
+    return this.postsQueryRepository.getById(createdPostId);
   }
 
   //get all posts by blogId
@@ -106,6 +106,6 @@ export class BlogsController {
   ): Promise<PageDto<PostViewModel>> {
     const blog = await this.blogsQueryRepository.findById(blogId);
     if (!blog) throw new NotFoundException();
-    return this.postsQueryRepository.findAllByBlogId(queryParams, blogId, userId);
+    return this.postsQueryRepository.getAllByBlogId(queryParams, blogId, userId);
   } ///
 }

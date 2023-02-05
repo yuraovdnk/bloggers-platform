@@ -4,161 +4,164 @@ import { Post } from '../../domain/post.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Like } from '../../../likes/domain/like.entity';
-import { PostMapper } from './post.mapper';
 import { PageDto } from '../../../../common/utils/PageDto';
-import { PostViewModel } from '../../dto/post-view.model';
 import { PostRawQuery, SortFieldsPostModel } from '../../typing/posts.type';
+import { PostViewModel } from '../../dto/post-view.model';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {}
 
-  async findAll(
-    queryParams: QueryParamsDto,
-    userId: string,
-  ): Promise<PageDto<PostViewModel>> {
+  async getAll(queryParams: QueryParamsDto, userId = null): Promise<PageDto<PostViewModel>> {
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
-      .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
+      .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
-        (subQuery) => {
-          return subQuery
-            .select([
-              'l."parentId"',
-              `COUNT(*) FILTER( where l."likeStatus" = 'Like')::int AS "post_likesCount" ,
-               COUNT(*) FILTER( where l."likeStatus" = 'Dislike')::int AS "post_dislikesCount"`,
-            ])
-            .from(Like, 'l')
-            .groupBy('l."parentId"');
-        },
+        Like,
         'likesCount',
-        '"likesCount"."parentId" = post.id',
+        '"likesCount"."parentId" = post.id and "likesCount"."parentType" = \'post\'',
       )
+      .addSelect([
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Dislike\'),0)::int AS "post_dislikesCount"',
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Like\'),0)::int AS "post_likesCount"',
+      ])
       .addSelect((subQuery) => {
         return subQuery
-          .select('l.likeStatus as "post_myStatus"')
+          .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
           .from(Like, 'l')
-          .where('post.id = l.parentId and l.userId = :userId', { userId });
+          .where(`post.id = l.parentId and l.userId = :userId and l.parentType='post'`, {
+            userId,
+          });
       })
-      .leftJoin(
-        (db) => {
-          return db
-            .select(['l', 'user.login as "l_userLogin"'])
-            .from(Like, 'l')
-            .where(`l.parentType = 'post' and l.likeStatus = 'Like'`)
-            .leftJoin('l.user', 'user')
-            .orderBy('l.addedAt', 'DESC')
-            .limit(3)
-            .offset(0);
-        },
-        'likes',
-        '"likes"."l_parentId" = post.id',
-      )
-      .orderBy('likes."l_addedAt"', 'DESC') //for Likes
+      .addSelect((db) => {
+        return db
+          .select([`COALESCE(json_agg("newestLikes"),'[]') as "post_newestLikes"`])
+          .from((sub) => {
+            return sub
+              .select([
+                'l.userId as "userId"',
+                'l.addedAt as "addedAt"',
+                'user.login as "userLogin"',
+              ])
+              .from(Like, 'l')
+              .where(
+                `l.parentId = post.id and l.parentType = 'post' and l.likeStatus = 'Like'`,
+              )
+              .leftJoin('l.user', 'user')
+              .orderBy('l.addedAt', 'DESC')
+              .limit(3)
+              .offset(0);
+          }, 'newestLikes');
+      })
+      .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
-    const totalCount = await queryBuilder.getCount();
-    const posts: PostRawQuery[] = await queryBuilder.getRawMany();
 
-    const postViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
-    return new PageDto(postViewDto, queryParams, totalCount);
+    const posts = await queryBuilder.getRawMany();
+    const totalCount = await queryBuilder.getCount();
+    const postsResponseDto = posts.map((i) => new PostViewModel(i));
+    return new PageDto(postsResponseDto, queryParams, totalCount);
   }
 
-  async findById(postId: string, userId?: string): Promise<PostViewModel> {
-    const post: PostRawQuery[] = await this.postEntity
+  async getById(postId: string, userId = null): Promise<PostViewModel> {
+    const post: PostRawQuery = await this.postEntity
       .createQueryBuilder('post')
-      .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
-      .where('post.id = :postId', { postId })
+      .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
-        (subQuery) => {
-          return subQuery
-            .select([
-              'l."parentId"',
-              `COUNT(*) FILTER( where l."likeStatus" = 'Like')::int AS "post_likesCount" ,
-               COUNT(*) FILTER( where l."likeStatus" = 'Dislike')::int AS "post_dislikesCount"`,
-            ])
-            .from(Like, 'l')
-            .groupBy('l."parentId"');
-        },
+        Like,
         'likesCount',
-        '"likesCount"."parentId" = post.id',
+        '"likesCount"."parentId" = post.id and "likesCount"."parentType" = \'post\'',
       )
+      .addSelect([
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Dislike\'),0)::int AS "post_dislikesCount"',
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Like\'),0)::int AS "post_likesCount"',
+      ])
       .addSelect((subQuery) => {
         return subQuery
-          .select('l.likeStatus as "post_myStatus"')
+          .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
           .from(Like, 'l')
-          .where('post.id = l.parentId and l.userId = :userId', { userId });
+          .where(`post.id = l.parentId and l.userId = :userId and l.parentType='post'`, {
+            userId,
+          });
       })
-      .leftJoin(
-        (db) => {
-          return db
-            .select(['l', 'user.login as "l_userLogin"'])
-            .from(Like, 'l')
-            .where(`l.parentType = 'post' and l.likeStatus = 'Like'`)
-            .leftJoin('l.user', 'user')
-            .orderBy('l.addedAt', 'DESC')
-            .limit(3)
-            .offset(0);
-        },
-        'likes',
-        '"likes"."l_parentId" = post.id',
-      )
-      .orderBy('likes."l_addedAt"', 'DESC') //for Likes
-      .getRawMany();
+      .addSelect((db) => {
+        return db
+          .select([`COALESCE(json_agg("newestLikes"),'[]') as "post_newestLikes"`])
+          .from((sub) => {
+            return sub
+              .select([
+                'l.userId as "userId"',
+                'l.addedAt as "addedAt"',
+                'user.login as "userLogin"',
+              ])
+              .from(Like, 'l')
+              .where(
+                `l.parentId = post.id and l.parentType = 'post' and l.likeStatus = 'Like'`,
+              )
+              .leftJoin('l.user', 'user')
+              .orderBy('l.addedAt', 'DESC')
+              .limit(3)
+              .offset(0);
+          }, 'newestLikes');
+      })
+      .where('post.id = :postId', { postId })
+      .groupBy('post.id,"post_blogName"')
+      .getRawOne();
 
-    const postViewDto: PostViewModel[] = PostMapper.mapLikes(post);
-    return postViewDto[0];
+    return new PostViewModel(post);
   }
 
-  async findAllByBlogId(
+  async getAllByBlogId(
     queryParams: QueryParamsDto,
     blogId: string,
     userId: string = null,
   ): Promise<PageDto<PostViewModel>> {
     const queryBuilder = this.postEntity.createQueryBuilder('post');
-
     queryBuilder
-      .select(['post', 'likesCount', 'likes', 'blog.name as "post_blogName"'])
-      .where('post.blogId = :blogId', { blogId })
+      .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
       .leftJoin(
-        (subQuery) => {
-          return subQuery
-            .select([
-              'l."parentId"',
-              `COUNT(*) FILTER( where l."likeStatus" = 'Like')::int AS "post_likesCount" ,
-               COUNT(*) FILTER( where l."likeStatus" = 'Dislike')::int AS "post_dislikesCount"`,
-            ])
-            .from(Like, 'l')
-            .groupBy('l."parentId"');
-        },
+        Like,
         'likesCount',
-        '"likesCount"."parentId" = post.id',
+        '"likesCount"."parentId" = post.id and "likesCount"."parentType" = \'post\'',
       )
+      .addSelect([
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Dislike\'),0)::int AS "post_dislikesCount"',
+        'COALESCE(COUNT(*) FILTER( where "likesCount"."likeStatus" = \'Like\'),0)::int AS "post_likesCount"',
+      ])
       .addSelect((subQuery) => {
         return subQuery
-          .select('l.likeStatus as "post_myStatus"')
+          .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
           .from(Like, 'l')
-          .where('post.id = l.parentId and l.userId = :userId', { userId });
+          .where(`post.id = l.parentId and l.userId = :userId and l.parentType='post'`, {
+            userId,
+          });
       })
-      .leftJoin(
-        (db) => {
-          return db
-            .select(['l', 'user.login as "l_userLogin"'])
-            .from(Like, 'l')
-            .where(`l.parentType = 'post' and l.likeStatus = 'Like'`)
-            .leftJoin('l.user', 'user')
-            .orderBy('l.addedAt', 'DESC')
-            .limit(3)
-            .offset(0);
-        },
-        'likes',
-        '"likes"."l_parentId" = post.id',
-      )
-      .orderBy('likes."l_addedAt"', 'DESC') //for Likes
+      .addSelect((db) => {
+        return db
+          .select([`COALESCE(json_agg("newestLikes"),'[]') as "post_newestLikes"`])
+          .from((sub) => {
+            return sub
+              .select([
+                'l.userId as "userId"',
+                'l.addedAt as "addedAt"',
+                'user.login as "userLogin"',
+              ])
+              .from(Like, 'l')
+              .where(
+                `l.parentId = post.id and l.parentType = 'post' and l.likeStatus = 'Like'`,
+              )
+              .leftJoin('l.user', 'user')
+              .orderBy('l.addedAt', 'DESC')
+              .limit(3)
+              .offset(0);
+          }, 'newestLikes');
+      })
+      .where('post.blogId = :blogId', { blogId })
+      .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
@@ -166,8 +169,7 @@ export class PostsQueryRepository {
     const totalCount = await queryBuilder.getCount();
     const posts: PostRawQuery[] = await queryBuilder.getRawMany();
 
-    const postsViewDto: PostViewModel[] = PostMapper.mapLikes(posts);
-
-    return new PageDto(postsViewDto, queryParams, totalCount);
+    const postResponseDto = posts.map((i) => new PostViewModel(i));
+    return new PageDto(postResponseDto, queryParams, totalCount);
   }
 }
