@@ -2,7 +2,7 @@ import { QueryParamsDto } from '../../../../common/pipes/query-params.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../../domain/post.entity';
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Like } from '../../../likes/domain/like.entity';
 import { PageDto } from '../../../../common/utils/PageDto';
 import { PostRawQuery, SortFieldsPostModel } from '../../typing/posts.type';
@@ -60,6 +60,7 @@ export class PostsQueryRepository {
       .offset(queryParams.skip);
 
     const posts = await queryBuilder.getRawMany();
+    if (!posts.length) throw new NotFoundException();
     const totalCount = await queryBuilder.getCount();
     const postsResponseDto = posts.map((i) => new PostViewModel(i));
     return new PageDto(postsResponseDto, queryParams, totalCount);
@@ -111,7 +112,7 @@ export class PostsQueryRepository {
       .groupBy('post.id,"post_blogName"')
       .getRawOne();
 
-    return new PostViewModel(post);
+    return post ? new PostViewModel(post) : null;
   }
 
   async getAllByBlogId(

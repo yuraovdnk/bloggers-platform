@@ -1,4 +1,5 @@
 import { PostRawQuery } from '../typing/posts.type';
+import { log } from 'util';
 
 export class PostViewModel {
   id: string;
@@ -16,6 +17,7 @@ export class PostViewModel {
   };
 
   constructor(model: PostRawQuery) {
+    console.log('1');
     this.id = model.post_id;
     this.title = model.post_title;
     this.shortDescription = model.post_shortDescription;
