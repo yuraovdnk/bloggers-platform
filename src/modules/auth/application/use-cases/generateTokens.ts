@@ -27,12 +27,12 @@ export class GenerateTokensUseCase implements ICommandHandler<GenerateTokensComm
     const payload = { userId: command.userId, deviceId: command.deviceInfo.deviceId };
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get('secrets.secretAccessToken'),
-      expiresIn: '1d',
+      expiresIn: '10s',
     });
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get('secrets.secretRefreshToken'),
-      expiresIn: '2d',
+      expiresIn: '20s',
     });
     //verify token to get signed time
     const decodedToken: any = this.jwtService.decode(refreshToken);

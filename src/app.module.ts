@@ -6,7 +6,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { BasicStrategy } from './modules/auth/strategies/basic.strategy';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TruncateData } from './modules/testing/truncateData';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './adapters/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/users/user.module';
@@ -14,6 +14,7 @@ import { BlogModule } from './modules/blogs/blog.module';
 import { PostModule } from './modules/posts/post.module';
 import { CommentModule } from './modules/comments/comment.module';
 import { SecurityModule } from './modules/security/security.module';
+import { APP_GUARD } from '@nestjs/core';
 
 const configModule = ConfigModule.forRoot({
   load: [getConfig],
@@ -41,10 +42,10 @@ const configModule = ConfigModule.forRoot({
     ConfigService,
     JwtService,
     BasicStrategy,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
