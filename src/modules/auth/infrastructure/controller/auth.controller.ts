@@ -111,6 +111,6 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtGuard)
   async infoAboutMe(@CurrentUser() userId: string): Promise<User> {
-    return this.usersQueryRepository.findById(userId);
+    return this.usersQueryRepository.getInfoByUserId(userId);
   }
 }

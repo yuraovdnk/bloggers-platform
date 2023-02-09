@@ -37,4 +37,12 @@ export class UsersQueryRepository {
 
     return new PageDto(users, queryParams, totalCount);
   }
+  async getInfoByUserId(userId: string) {
+    const user = await this.userEntity
+      .createQueryBuilder('user')
+      .select(['user.email', 'user.login', 'user.id'])
+      .where('user.id = :userId', { userId })
+      .getOne();
+    return user;
+  }
 }

@@ -1,8 +1,6 @@
-import { v4 as uuid } from 'uuid';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AuthRepository } from '../../infrastructure/repository/auth.repository';
 import { DeviceInfoType } from '../../../../decorators/device-meta.decotator';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '../auth.service';
 
