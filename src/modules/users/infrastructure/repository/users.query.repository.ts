@@ -40,9 +40,9 @@ export class UsersQueryRepository {
   async getInfoByUserId(userId: string) {
     const user = await this.userEntity
       .createQueryBuilder('user')
-      .select(['user.email', 'user.login', 'user.id'])
+      .select(['user.email as "email"', 'user.login as "login"', 'user.id as "userId"'])
       .where('user.id = :userId', { userId })
-      .getOne();
+      .getRawOne();
     return user;
   }
 }
