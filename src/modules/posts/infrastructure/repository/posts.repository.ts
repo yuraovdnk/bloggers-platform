@@ -6,7 +6,9 @@ import { DbPostDto } from '../../typing/posts.type';
 
 @Injectable()
 export class PostsRepository {
-  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {}
+  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {
+    console.log('PostsRepository');
+  }
 
   async create(newPost: DbPostDto) {
     const post = new Post();

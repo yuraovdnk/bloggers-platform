@@ -6,7 +6,9 @@ import { CommentInputType } from '../../typing/comments.type';
 
 @Injectable()
 export class CommentsRepository {
-  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {}
+  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {
+    console.log('CommentsRepository init');
+  }
 
   async create(newComment: CommentInputType) {
     const comment = new Comment();

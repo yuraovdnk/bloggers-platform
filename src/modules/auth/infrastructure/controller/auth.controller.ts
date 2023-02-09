@@ -18,6 +18,8 @@ import { ChangePasswordCommand } from '../../application/use-cases/changePasswor
 import { GenerateTokensCommand } from '../../application/use-cases/generateTokens';
 import { UsersQueryRepository } from '../../../users/infrastructure/repository/users.query.repository';
 import { SignOutCommand } from '../../application/use-cases/signOut';
+import { User } from '../../../users/domain/entities/user.entity';
+import { AuthService } from '../../application/auth.service';
 
 @Throttle(5, 10)
 @Controller('auth')
@@ -88,7 +90,7 @@ export class AuthController {
     @Res() res: Response,
     @CurrentUser() userId: string,
     @DeviceMeta() deviceInfo: DeviceInfoType,
-  ) {
+  ): Promise<void> {
     await this.commandBus.execute(new SignOutCommand(userId, deviceInfo));
     res.clearCookie('refreshToken');
     res.sendStatus(204);
@@ -96,19 +98,19 @@ export class AuthController {
 
   @Post('password-recovery')
   @HttpCode(204)
-  async recoverPassword(@Body() emailDto: EmailDto) {
+  async recoverPassword(@Body() emailDto: EmailDto): Promise<void> {
     return this.commandBus.execute(new RecoveryPasswordCommand(emailDto.email));
   }
 
   @Post('new-password')
   @HttpCode(204)
-  async setNewPassword(@Body() newPasswordDto: NewPasswordDto) {
+  async setNewPassword(@Body() newPasswordDto: NewPasswordDto): Promise<void> {
     return this.commandBus.execute(new ChangePasswordCommand(newPasswordDto));
   }
 
   @Get('me')
   @UseGuards(JwtGuard)
-  async infoAboutMe(@CurrentUser() userId: string) {
+  async infoAboutMe(@CurrentUser() userId: string): Promise<User> {
     return this.usersQueryRepository.findById(userId);
   }
 }

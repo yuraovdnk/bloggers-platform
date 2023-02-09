@@ -10,7 +10,6 @@ import { BlogsQueryRepository } from './infrastructure/repository/blogs.query.re
 import { UpdateBlogUseCase } from './application/use-cases/commands/update-blog.use-case';
 import { DeleteBlogUseCase } from './application/use-cases/commands/delete-blog.use-case';
 import { PostModule } from '../posts/post.module';
-import { JwtExtractGuard } from '../../common/guards/jwt-extract.guard';
 import { JwtService } from '@nestjs/jwt';
 import { UserModule } from '../users/user.module';
 
@@ -19,18 +18,15 @@ const useCases = [CreateBlogUseCase, UpdateBlogUseCase, DeleteBlogUseCase];
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([Blog]),
-    forwardRef(() => PostModule),
     UserModule,
+    forwardRef(() => PostModule),
   ],
   controllers: [BlogsController],
-  providers: [
-    BlogsService,
-    BlogsQueryRepository,
-    BlogsRepository,
-    JwtExtractGuard,
-    JwtService,
-    ...useCases,
-  ],
+  providers: [BlogsService, BlogsQueryRepository, BlogsRepository, JwtService, ...useCases],
   exports: [BlogsRepository],
 })
-export class BlogModule {}
+export class BlogModule {
+  constructor() {
+    console.log('BlogModule init');
+  }
+}

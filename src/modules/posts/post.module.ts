@@ -2,7 +2,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import { PostsController } from './infrastructure/controller/posts.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './domain/post.entity';
-import { JwtExtractGuard } from '../../common/guards/jwt-extract.guard';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreatePostUseCase } from './application/use-cases/commands/create-post.use-case';
 import { CreatePostForBlogUseCase } from '../blogs/application/use-cases/commands/create-post-for-blog.use-case';
@@ -40,10 +39,13 @@ const useCases = [
     LikesRepository,
     PostsRepository,
     PostsQueryRepository,
-    JwtExtractGuard,
     JwtService,
     IsExistBlog,
   ],
   exports: [PostsRepository, PostsQueryRepository],
 })
-export class PostModule {}
+export class PostModule {
+  constructor() {
+    console.log('PostModule init');
+  }
+}

@@ -1,9 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { IUser } from './IUser';
 
 @Entity('Users')
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

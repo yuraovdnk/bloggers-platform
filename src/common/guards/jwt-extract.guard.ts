@@ -1,25 +1,19 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
-import { log } from 'util';
 
 @Injectable()
 export class JwtExtractGuard implements CanActivate {
   constructor(
     private usersRepo: UsersRepository,
     private jwtService: JwtService,
-    @Inject(ConfigService) private configService: ConfigService,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    console.log('JwtExtractGuard init');
+  }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-
     if (!request.headers.authorization) {
       request.user = { id: null };
       return true;

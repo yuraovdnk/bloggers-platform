@@ -5,9 +5,15 @@ import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthRepository } from '../../modules/auth/infrastructure/repository/auth.repository';
 import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
+import { IUser } from '../../modules/users/domain/entities/IUser';
 
 @Injectable()
-export class JwtCookieGuard extends AuthGuard('jwt-cookie') {}
+export class JwtCookieGuard extends AuthGuard('jwt-cookie') {
+  constructor() {
+    super();
+    console.log('JwtCookieGuard');
+  }
+}
 
 @Injectable()
 export class JwtCookieStrategy extends PassportStrategy(Strategy, 'jwt-cookie') {
@@ -21,20 +27,19 @@ export class JwtCookieStrategy extends PassportStrategy(Strategy, 'jwt-cookie') 
         return req.cookies.refreshToken;
       },
       ignoreExpiration: false,
-      secretOrKey: configService.get('secrets.secretRefreshToken'),
+      secretOrKey: configService.get<string>('secrets.secretRefreshToken'),
       passReqToCallback: true,
     });
   }
 
-  async validate(req: Request, payload: any): Promise<any> {
-    console.log(payload);
+  async validate(req: Request, payload: any): Promise<IUser & { deviceId: string }> {
     const user = await this.usersRepository.findById(payload.userId);
     if (!user) {
       throw new UnauthorizedException();
     }
 
     const session = await this.authRepository.getByDeviceIdAndUserId(
-      payload.userId,
+      user.id,
       payload.deviceId,
     );
 

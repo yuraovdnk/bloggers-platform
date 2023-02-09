@@ -26,4 +26,10 @@ export class AuthSession {
 
   @ManyToOne(() => User, (u) => u.id, { onDelete: 'CASCADE' })
   user: User;
+
+  refreshAuthSession(deviceId: string, time: { iat: Date; exp: Date }) {
+    this.deviceId = deviceId;
+    this.issuedAt = time.iat;
+    this.expiresAt = time.exp;
+  }
 }

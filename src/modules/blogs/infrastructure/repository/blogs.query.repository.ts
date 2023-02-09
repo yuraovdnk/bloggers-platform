@@ -9,7 +9,9 @@ import { BlogViewModel } from '../../dto/blog-view.model';
 
 @Injectable()
 export class BlogsQueryRepository {
-  constructor(@InjectRepository(Blog) private blogEntity: Repository<Blog>) {}
+  constructor(@InjectRepository(Blog) private blogEntity: Repository<Blog>) {
+    console.log('BlogsQueryRepository init');
+  }
 
   async findById(blogId: string): Promise<BlogViewModel | null> {
     const blog = await this.blogEntity

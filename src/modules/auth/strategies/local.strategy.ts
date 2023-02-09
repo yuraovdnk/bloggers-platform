@@ -7,7 +7,12 @@ import * as bcrypt from 'bcrypt';
 import { UsersRepository } from '../../users/infrastructure/repository/users.repository';
 
 @Injectable()
-export class LocalAuthGuard extends AuthGuard('local') {}
+export class LocalAuthGuard extends AuthGuard('local') {
+  constructor() {
+    super();
+    console.log('LocalAuthGuard init ');
+  }
+}
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {

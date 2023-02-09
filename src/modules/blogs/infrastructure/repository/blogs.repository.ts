@@ -6,7 +6,9 @@ import { BlogInputDbType } from '../../typing/blogs.types';
 
 @Injectable()
 export class BlogsRepository {
-  constructor(@InjectRepository(Blog) private blogEntity: Repository<Blog>) {}
+  constructor(@InjectRepository(Blog) private blogEntity: Repository<Blog>) {
+    console.log('BlogsRepository init');
+  }
 
   async findById(blogId: string): Promise<Blog> {
     const blog = await this.blogEntity

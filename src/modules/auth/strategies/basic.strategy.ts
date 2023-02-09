@@ -4,11 +4,17 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class BasicAuthGuard extends AuthGuard('basic') {}
+export class BasicAuthGuard extends AuthGuard('basic') {
+  constructor() {
+    super();
+    console.log('init basic');
+  }
+}
 
 @Injectable()
 export class BasicStrategy extends PassportStrategy(Strategy, 'basic') {
   constructor(private configService: ConfigService) {
+    console.log('AUTH GUARD init');
     super({
       passReqToCallback: true,
     });

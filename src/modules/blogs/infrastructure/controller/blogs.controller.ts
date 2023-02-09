@@ -36,7 +36,9 @@ export class BlogsController {
     private blogsQueryRepository: BlogsQueryRepository,
     private commandBus: CommandBus,
     private postsQueryRepository: PostsQueryRepository,
-  ) {}
+  ) {
+    console.log('BlogsController init');
+  }
 
   //get all blogs
   @Get()
@@ -58,7 +60,6 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(@Body() createBlog: CreateBlogDto): Promise<BlogViewModel> {
-    console.log(createBlog, 'test');
     const createdBlogId = await this.commandBus.execute(new CreateBlogCommand(createBlog));
     return this.blogsQueryRepository.findById(createdBlogId);
   }
@@ -107,5 +108,5 @@ export class BlogsController {
     const blog = await this.blogsQueryRepository.findById(blogId);
     if (!blog) throw new NotFoundException();
     return this.postsQueryRepository.getAllByBlogId(queryParams, blogId, userId);
-  } ///
+  }
 }

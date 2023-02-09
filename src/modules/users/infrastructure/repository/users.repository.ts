@@ -6,7 +6,9 @@ import { UserDbDto } from '../../typing/user.types';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectRepository(User) private userEntity: Repository<User>) {}
+  constructor(@InjectRepository(User) private userEntity: Repository<User>) {
+    console.log('UsersRepository');
+  }
 
   async create(newUser: UserDbDto): Promise<User> {
     const user = new User();

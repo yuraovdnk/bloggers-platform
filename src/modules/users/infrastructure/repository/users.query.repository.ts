@@ -9,7 +9,9 @@ import { SortFieldUserModel } from '../../typing/user.types';
 
 @Injectable()
 export class UsersQueryRepository {
-  constructor(@InjectRepository(User) private userEntity: Repository<User>) {}
+  constructor(@InjectRepository(User) private userEntity: Repository<User>) {
+    console.log('UsersQueryRepository init');
+  }
 
   async findById(userId: string) {
     const user = await this.userEntity

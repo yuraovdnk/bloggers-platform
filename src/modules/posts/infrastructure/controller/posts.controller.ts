@@ -40,7 +40,9 @@ export class PostsController {
     private postsQueryRepository: PostsQueryRepository,
     private commentsQueryRepository: CommentsQueryRepository,
     private commandBus: CommandBus,
-  ) {}
+  ) {
+    console.log('PostsController init');
+  }
   //get posts
   @UseGuards(JwtExtractGuard)
   @Get()

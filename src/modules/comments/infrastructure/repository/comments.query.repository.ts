@@ -10,7 +10,9 @@ import { RawQueryComment, SortCommentFields } from '../../typing/comments.type';
 
 @Injectable()
 export class CommentsQueryRepository {
-  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {}
+  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {
+    console.log('CommentsQueryRepository init');
+  }
 
   async findById(commentId: string, userId: string): Promise<CommentViewModel | null> {
     const comment: Comment = await this.commentEntity

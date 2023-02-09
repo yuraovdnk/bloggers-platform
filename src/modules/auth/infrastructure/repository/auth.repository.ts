@@ -6,13 +6,15 @@ import { DeviceInfoType } from '../../../../decorators/device-meta.decotator';
 
 @Injectable()
 export class AuthRepository {
-  constructor(@InjectRepository(AuthSession) private authEntity: Repository<AuthSession>) {}
+  constructor(@InjectRepository(AuthSession) private authEntity: Repository<AuthSession>) {
+    console.log('AuthRepository init');
+  }
 
   async create(
     userId: string,
     timeToken: { iat: Date; exp: Date },
     deviceInfo: DeviceInfoType,
-  ): Promise<AuthSession> {
+  ): Promise<any> {
     const session = await this.authEntity.create({
       userId,
       deviceId: deviceInfo.deviceId,
@@ -21,6 +23,7 @@ export class AuthRepository {
       issuedAt: timeToken.iat,
       expiresAt: timeToken.exp,
     });
+    await this.authEntity.save(session);
     return session;
   }
 

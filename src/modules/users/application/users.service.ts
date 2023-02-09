@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  constructor() {
+    console.log('UsersService init');
+  }
+}

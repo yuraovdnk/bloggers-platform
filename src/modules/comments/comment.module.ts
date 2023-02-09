@@ -7,7 +7,6 @@ import { UpdateCommentUseCase } from './application/use-cases/commands/update-co
 import { DeleteCommentUseCase } from './application/use-cases/commands/delete-comment.use-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { PostModule } from '../posts/post.module';
-import { JwtExtractGuard } from '../../common/guards/jwt-extract.guard';
 import { UserModule } from '../users/user.module';
 import { JwtService } from '@nestjs/jwt';
 import { CommentsRepository } from './infrastructure/repository/comments.repository';
@@ -35,9 +34,12 @@ const useCases = [
     CommentsRepository,
     LikesRepository,
     CommentsQueryRepository,
-    JwtExtractGuard,
     JwtService,
   ],
   exports: [CommentsQueryRepository],
 })
-export class CommentModule {}
+export class CommentModule {
+  constructor() {
+    console.log('CommentModule init');
+  }
+}

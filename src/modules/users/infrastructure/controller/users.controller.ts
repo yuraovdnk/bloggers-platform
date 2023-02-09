@@ -23,8 +23,11 @@ export class UsersController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
     private commandBus: CommandBus,
-  ) {}
+  ) {
+    console.log('UsersController init');
+  }
 
+  //create User
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(201)
@@ -34,12 +37,15 @@ export class UsersController {
     );
     return this.usersQueryRepository.findById(createdUserId);
   }
+
+  //get all users
   @UseGuards(BasicAuthGuard)
   @Get()
   findAllUsers(@Query() queryParams: QueryParamsDto) {
     return this.usersQueryRepository.findAll(queryParams);
   }
 
+  //get user by id
   @UseGuards(BasicAuthGuard)
   @Delete(':userId')
   @HttpCode(204)

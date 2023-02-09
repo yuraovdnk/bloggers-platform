@@ -12,7 +12,6 @@ import { DeviceInfoType, DeviceMeta } from '../../../../decorators/device-meta.d
 import { JwtCookieGuard } from '../../../../common/guards/jwt-cookie.strategy';
 import { AuthRepository } from '../../../auth/infrastructure/repository/auth.repository';
 import { AuthSession } from '../../../auth/domain/authSession.entity';
-
 import { SecurityService } from '../../application/security.service';
 
 @Controller('security')

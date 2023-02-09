@@ -9,9 +9,13 @@ export class TruncateData {
   @Delete()
   @HttpCode(204)
   async deleteAllData() {
-    // const entities = this.dataSource.entityMetadatas;
-    await this.dataSource.query(
-      `Truncate "Users","Likes","Posts","AuthSession","Blogs","Comments" RESTART IDENTITY CASCADE`,
-    );
+    try {
+      await this.dataSource.query(
+        `Truncate "Users","Likes","Posts","AuthSession","Blogs","Comments" RESTART IDENTITY CASCADE`,
+      );
+      return true;
+    } catch (e) {
+      new Error(e);
+    }
   }
 }
