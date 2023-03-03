@@ -44,7 +44,6 @@ export class SaUsersController {
   //get all users
   @Get()
   findAllUsers(@Query() queryParams: SaQueryParamsDto) {
-    console.log(queryParams);
     return this.usersQueryRepository.findAll(queryParams);
   }
 

@@ -17,10 +17,11 @@ export class UsersQueryRepository {
   async findById(userId: string) {
     const user = await this.userEntity
       .createQueryBuilder('user')
-      .select(['user.email', 'user.login', 'user.id', 'user.createdAt'])
+      .select(['user.email', 'user.login', 'user.id', 'user.createdAt', 'banInfo'])
+      .leftJoin('user.banInfo', 'banInfo')
       .where('user.id = :userId', { userId })
       .getOne();
-    return user;
+    return new UserViewModel(user);
   }
 
   async findAll(queryParams: SaQueryParamsDto) {
