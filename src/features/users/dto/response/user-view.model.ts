@@ -15,7 +15,7 @@ export class UserViewModel {
     this.email = user.email;
     this.createdAt = user.createdAt;
     this.banInfo = {
-      isBanned: user.banInfo?.isBanned ?? null,
+      isBanned: !!user.banInfo?.isBanned,
       banDate: user.banInfo?.banDate ?? null,
       banReason: user.banInfo?.banReason ?? null,
     };
