@@ -1,5 +1,5 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
-import { mapErrors } from '../../exceptions/mapErrors';
+import { mapErrors } from '../exceptions/mapErrors';
 import { StatusLike } from '../types/commonEnums';
 @Injectable()
 export class ParseStatusLikeEnumPipe implements PipeTransform {

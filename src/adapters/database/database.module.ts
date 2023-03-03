@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { BanUserSubscriber } from '../../features/users/subscribers/banUser.subscriber';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
         type: 'postgres',
         autoLoadEntities: true,
         synchronize: true,
+        subscribers: [BanUserSubscriber],
         extra: {
           poolSize: 4,
         },

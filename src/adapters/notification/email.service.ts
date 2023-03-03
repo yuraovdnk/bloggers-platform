@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { User } from '../../modules/users/domain/entities/user.entity';
+import { User } from '../../features/users/domain/entities/user.entity';
 @Injectable()
 export class EmailService {
   async sendConfirmMail(user: User) {
@@ -32,7 +32,7 @@ export class EmailService {
       from: '"Yura" <yuraovdnk@gmail.com>',
       to: user.email,
       subject: 'Passwrod recovery code',
-      text: `https://somesite.com/password-recovery?recoveryCode=${user.passwordRecoveryCode}`,
+      //text: `https://somesite.com/password-recovery?recoveryCode=${user.passwordRecoveryCode}`,
     });
     return info;
   }

@@ -2,8 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
-import { mapValidationErrors } from './exceptions/mapErrors';
-import { ErrorExceptionFilter, HttpExceptionFilter } from './exceptions/exception.filter';
+import { mapValidationErrors } from './common/exceptions/mapErrors';
+import {
+  ErrorExceptionFilter,
+  HttpExceptionFilter,
+} from './common/exceptions/exception.filter';
 import { useContainer } from 'class-validator';
 
 export const createApp = async (app) => {

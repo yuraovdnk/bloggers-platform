@@ -1,12 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-
 import { ConfigService } from '@nestjs/config';
-import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
-import { IUser } from '../../modules/users/domain/entities/IUser';
-import { AuthRepository } from '../../modules/auth/infrastructure/repository/auth.repository';
-import { log } from 'util';
+import { UsersRepository } from '../../features/users/infrastructure/repository/users.repository';
+import { AuthRepository } from '../../features/auth/infrastructure/repository/auth.repository';
 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {
@@ -30,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: any): Promise<IUser> {
+  async validate(payload: any) {
     const session = await this.authRepository.getByDeviceIdAndUserId(
       payload.userId,
       payload.deviceId,

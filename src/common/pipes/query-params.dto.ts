@@ -11,10 +11,6 @@ export enum Order {
 export class QueryParamsDto {
   readonly searchNameTerm = '';
 
-  readonly searchLoginTerm = '';
-
-  readonly searchEmailTerm = '';
-
   @Transform(({ value }) => {
     const num = parseInt(value);
     if (isNaN(num)) return 1;

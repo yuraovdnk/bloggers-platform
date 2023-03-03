@@ -3,9 +3,9 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { AuthRepository } from '../../modules/auth/infrastructure/repository/auth.repository';
-import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
-import { IUser } from '../../modules/users/domain/entities/IUser';
+import { AuthRepository } from '../../features/auth/infrastructure/repository/auth.repository';
+import { UsersRepository } from '../../features/users/infrastructure/repository/users.repository';
+import { IUser } from '../../features/users/domain/entities/IUser';
 
 @Injectable()
 export class JwtCookieGuard extends AuthGuard('jwt-cookie') {
@@ -32,7 +32,7 @@ export class JwtCookieStrategy extends PassportStrategy(Strategy, 'jwt-cookie') 
     });
   }
 
-  async validate(req: Request, payload: any): Promise<IUser & { deviceId: string }> {
+  async validate(req: Request, payload: any) {
     const user = await this.usersRepository.findById(payload.userId);
     if (!user) {
       throw new UnauthorizedException();

@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
+import { UsersRepository } from '../../features/users/infrastructure/repository/users.repository';
 
 @Injectable()
 export class JwtExtractGuard implements CanActivate {

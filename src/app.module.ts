@@ -1,19 +1,19 @@
-import { getConfig } from './configuration/config';
+import { getConfig } from './common/configuration/config';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { CqrsModule } from '@nestjs/cqrs';
-import { TruncateData } from './modules/testing/truncateData';
+import { TruncateData } from './features/testing/truncateData';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './adapters/database/database.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/users/user.module';
-import { SecurityModule } from './modules/security/security.module';
+import { AuthModule } from './features/auth/auth.module';
+import { UserModule } from './features/users/user.module';
+import { SecurityModule } from './features/security/security.module';
 import { APP_GUARD } from '@nestjs/core';
-import { BlogModule } from './modules/blogs/blog.module';
-import { PostModule } from './modules/posts/post.module';
-import { CommentModule } from './modules/comments/comment.module';
+import { BlogModule } from './features/blogs/blog.module';
+import { PostModule } from './features/posts/post.module';
+import { CommentModule } from './features/comments/comment.module';
 
 const configModule = ConfigModule.forRoot({
   load: [getConfig],
@@ -23,7 +23,6 @@ const configModule = ConfigModule.forRoot({
 @Module({
   imports: [
     configModule,
-    //EnvConfigModule,
     DatabaseModule,
     CqrsModule,
     PassportModule,
