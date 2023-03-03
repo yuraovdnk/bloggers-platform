@@ -29,7 +29,7 @@ export class UsersQueryRepository {
       .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt', 'banInfo'])
       .where(`${filterUserSelecting(queryParams.banStatus)}`)
-      .andWhere(`user.login ~~* :loginTerm and user.email ~~* :emailTerm`, {
+      .andWhere(`user.login ~~* :loginTerm or user.email ~~* :emailTerm`, {
         loginTerm: `%${queryParams.searchLoginTerm}%`,
         emailTerm: `%${queryParams.searchEmailTerm}%`,
       })
