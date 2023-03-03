@@ -18,7 +18,7 @@ export class PostsQueryRepository {
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
       .select(['post', 'blog.name as "post_blogName"'])
-      .leftJoin('blogs.blog', 'blog')
+      .leftJoin('post.blog', 'blog')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -40,7 +40,7 @@ export class PostsQueryRepository {
             .leftJoin('user.banInfo', 'user_banInfo')
             .where('"user_banInfo" is null'),
         'likesForCount',
-        '"likesForCount"."like_parentId" = blogs.id and "likesForCount"."like_parentType" = \'blogs\'',
+        '"likesForCount"."like_parentId" = post.id and "likesForCount"."like_parentType" = \'post\'',
       )
       .addSelect((db) => {
         return db
@@ -63,7 +63,7 @@ export class PostsQueryRepository {
               .offset(0);
           }, 'newestLikes');
       })
-      .groupBy('blogs.id,"post_blogName"')
+      .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
@@ -80,7 +80,7 @@ export class PostsQueryRepository {
     const post: PostRawQuery = await this.postEntity
       .createQueryBuilder('post')
       .select(['post', 'blog.name as "post_blogName"'])
-      .leftJoin('blogs.blog', 'blog')
+      .leftJoin('post.blog', 'blog')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -102,7 +102,7 @@ export class PostsQueryRepository {
             .leftJoin('user.banInfo', 'user_banInfo')
             .where('"user_banInfo" is null'),
         'likesForCount',
-        '"likesForCount"."like_parentId" = blogs.id and "likesForCount"."like_parentType" = \'blogs\'',
+        '"likesForCount"."like_parentId" = post.id and "likesForCount"."like_parentType" = \'post\'',
       )
       .addSelect((db) => {
         return db
@@ -125,8 +125,8 @@ export class PostsQueryRepository {
               .offset(0);
           }, 'newestLikes');
       })
-      .groupBy('blogs.id,"post_blogName"')
-      .where('blogs.id = :postId', { postId })
+      .groupBy('post.id,"post_blogName"')
+      .where('post.id = :postId', { postId })
       .getRawOne();
 
     return post ? new PostViewModel(post) : null;
@@ -140,7 +140,7 @@ export class PostsQueryRepository {
     const queryBuilder = this.postEntity.createQueryBuilder('post');
     queryBuilder
       .select(['post', 'blog.name as "post_blogName"'])
-      .leftJoin('blogs.blog', 'blog')
+      .leftJoin('post.blog', 'blog')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -162,7 +162,7 @@ export class PostsQueryRepository {
             .leftJoin('user.banInfo', 'user_banInfo')
             .where('"user_banInfo" is null'),
         'likesForCount',
-        '"likesForCount"."like_parentId" = blogs.id and "likesForCount"."like_parentType" = \'blogs\'',
+        '"likesForCount"."like_parentId" = post.id and "likesForCount"."like_parentType" = \'post\'',
       )
       .addSelect((db) => {
         return db
@@ -185,8 +185,8 @@ export class PostsQueryRepository {
               .offset(0);
           }, 'newestLikes');
       })
-      .where('blogs.blogId = :blogId', { blogId })
-      .groupBy('blogs.id,"post_blogName"')
+      .where('post.blogId = :blogId', { blogId })
+      .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
