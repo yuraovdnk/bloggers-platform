@@ -80,8 +80,11 @@ export class BloggerBlogsController {
   //delete blog
   @Delete('blogs/:blogId')
   @HttpCode(204)
-  async deleteBlog(@Param('blogId', ParseUUIDPipe) blogId: string): Promise<boolean> {
-    return this.commandBus.execute(new DeleteBlogCommand(blogId));
+  async deleteBlog(
+    @Param('blogId', ParseUUIDPipe) blogId: string,
+    @CurrentUser() userId: string,
+  ): Promise<boolean> {
+    return this.commandBus.execute(new DeleteBlogCommand(blogId, userId));
   }
 
   //create blogs for blog
