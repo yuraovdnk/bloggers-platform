@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../../domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { SortFieldUserModel } from '../../typing/user.types';
-import { SaQueryParamsDto } from '../../dto/request/sa-query-params.dto';
-import { filterUserSelecting } from '../../helpers/filter.users';
+import { BanStatusEnum, SaQueryParamsDto } from '../../dto/request/sa-query-params.dto';
 import { PageDto } from '../../../../common/utils/PageDto';
 import { UserViewModel } from '../../dto/response/user-view.model';
 
@@ -25,21 +24,26 @@ export class UsersQueryRepository {
   }
 
   async findAll(queryParams: SaQueryParamsDto) {
-    console.log(queryParams.sortByField(SortFieldUserModel));
+    console.log(queryParams.searchLoginTerm);
     const [users, totalCount] = await this.userEntity
       .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt', 'banInfo'])
-      .where(`${filterUserSelecting(queryParams.banStatus)}`)
-      .andWhere(`user.login ~~* :loginTerm or user.email ~~* :emailTerm`, {
-        loginTerm: `%${queryParams.searchLoginTerm}%`,
-        emailTerm: `%${queryParams.searchEmailTerm}%`,
-      })
+      .where(
+        `((:ban = 'all') or
+               (:ban = 'banned' and "banInfo"."isBanned" is not null) or
+               (:ban = 'notBanned' and "banInfo"."isBanned" is null)) and
+               (user.login ~~* :loginTerm and user.email ~~* :emailTerm)`,
+        {
+          ban: queryParams.banStatus,
+          loginTerm: `%${queryParams.searchLoginTerm}%`,
+          emailTerm: `%${queryParams.searchEmailTerm}%`,
+        },
+      )
       .leftJoin('user.banInfo', 'banInfo')
       .orderBy(`user.${queryParams.sortByField(SortFieldUserModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
       .getManyAndCount();
-
     const mapped = users.map((i) => new UserViewModel(i));
     return new PageDto(mapped, queryParams, totalCount);
   }
