@@ -25,6 +25,7 @@ export class UsersQueryRepository {
   }
 
   async findAll(queryParams: SaQueryParamsDto) {
+    console.log(queryParams.sortByField(SortFieldUserModel));
     const [users, totalCount] = await this.userEntity
       .createQueryBuilder('user')
       .select(['user.email', 'user.login', 'user.id', 'user.createdAt', 'banInfo'])

@@ -19,6 +19,7 @@ export class CommentsQueryRepository {
       .createQueryBuilder('comment')
       .select(['comment', 'likes'])
       .leftJoin('comment.user', 'user')
+      .leftJoin('user.banInfo', 'userBanInfo')
       .addSelect('user.login')
       .leftJoin(
         (subQuery) => {
@@ -41,7 +42,7 @@ export class CommentsQueryRepository {
           .where('li.parentId = comment.id')
           .andWhere('li.userId = :userId', { userId });
       })
-      .where('comment.id = :commentId', { commentId })
+      .where('comment.id = :commentId and "userBanInfo"."isBanned" is null', { commentId })
       .getRawOne();
 
     return comment ? new CommentViewModel(comment) : null;
