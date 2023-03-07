@@ -32,7 +32,7 @@ export class UsersQueryRepository {
         `((:ban = 'all') or
                (:ban = 'banned' and "banInfo"."isBanned" is not null) or
                (:ban = 'notBanned' and "banInfo"."isBanned" is null)) and
-               (user.login ~~* :loginTerm and user.email ~~* :emailTerm)`,
+               (user.login ilike :loginTerm or user.email ilike :emailTerm)`,
         {
           ban: queryParams.banStatus,
           loginTerm: `%${queryParams.searchLoginTerm}%`,
