@@ -30,7 +30,8 @@ export class CommentsQueryRepository {
                COUNT(*) FILTER( where l."likeStatus" = 'Dislike')::int AS "dislikesCount"`,
             ])
             .from(Like, 'l')
-            .leftJoin('l.user', 'user_banInfo')
+            .leftJoin('l.user', 'user')
+            .leftJoin('user.banInfo', 'user_banInfo')
             .where('"user_banInfo" is null')
             .groupBy('l."parentId"');
         },
