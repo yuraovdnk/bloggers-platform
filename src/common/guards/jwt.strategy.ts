@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersRepository } from '../../features/users/infrastructure/repository/users.repository';
-import { AuthRepository } from '../../features/auth/infrastructure/repository/auth.repository';
+import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
+import { AuthRepository } from '../../modules/auth/infrastructure/repository/auth.repository';
 
 @Injectable()
 export class JwtGuard extends AuthGuard('jwt') {

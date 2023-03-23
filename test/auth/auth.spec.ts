@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { createApp } from '../../src/main';
 import request from 'supertest';
-import { AuthModule } from '../../src/features/auth/auth.module';
+import { AuthModule } from '../../src/modules/auth/auth.module';
 import { AppModule } from '../../src/app.module';
 
 describe('Auth', () => {

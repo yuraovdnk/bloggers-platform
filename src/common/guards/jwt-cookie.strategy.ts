@@ -3,9 +3,8 @@ import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { AuthRepository } from '../../features/auth/infrastructure/repository/auth.repository';
-import { UsersRepository } from '../../features/users/infrastructure/repository/users.repository';
-import { IUser } from '../../features/users/domain/entities/IUser';
+import { AuthRepository } from '../../modules/auth/infrastructure/repository/auth.repository';
+import { UsersRepository } from '../../modules/users/infrastructure/repository/users.repository';
 
 @Injectable()
 export class JwtCookieGuard extends AuthGuard('jwt-cookie') {

@@ -1,4 +1,4 @@
-import { QueryParamsDto } from '../pipes/query-params.dto';
+import { QueryParamsDto } from '../dtos/query-params.dto';
 
 export class PageDto<T> {
   pagesCount: number;

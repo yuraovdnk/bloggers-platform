@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { BanUserSubscriber } from '../../features/users/subscribers/banUser.subscriber';
+import { BanUserSubscriber } from '../../modules/users/domain/subscribers/banUser.subscriber';
 
 @Module({
   imports: [

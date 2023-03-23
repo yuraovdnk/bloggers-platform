@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { User } from '../../features/users/domain/entities/user.entity';
+import { User } from '../../modules/users/domain/entity/user.entity';
 @Injectable()
 export class EmailService {
   async sendConfirmMail(user: User) {
