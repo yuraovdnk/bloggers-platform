@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from '../../domain/entity/comment.entity';
 import { Repository } from 'typeorm';
@@ -8,7 +8,6 @@ import { QueryParamsDto } from '../../../../common/dtos/query-params.dto';
 import { PageDto } from '../../../../common/utils/PageDto';
 import { RawQueryComment, SortCommentFields } from '../../application/types/comments.type';
 import { BloggerCommentViewModel } from '../../../blogs/application/dto/response/blogger-comment-view.model';
-import { SortFieldsPostModel } from '../../../posts/application/types/posts.type';
 
 @Injectable()
 export class CommentsQueryRepository {

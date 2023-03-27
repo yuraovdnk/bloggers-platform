@@ -9,8 +9,6 @@ import { add } from 'date-fns';
 import request from 'supertest';
 import { TestService } from '../../src/modules/testing/test.service';
 import { PostsRepository } from '../../src/modules/posts/infrastructure/repository/posts.repository';
-import { PageDto } from '../../src/common/utils/PageDto';
-import { PostViewModel } from '../../src/modules/posts/application/dto/post-view.model';
 
 describe('SA-BLOGS', () => {
   let app: INestApplication;
