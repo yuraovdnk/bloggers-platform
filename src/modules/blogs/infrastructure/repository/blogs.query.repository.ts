@@ -36,7 +36,9 @@ export class BlogsQueryRepository
     const [blogs, totalCount] = await this.blogEntity
       .createQueryBuilder('b')
       .select('b')
-      .where('b.name ~~* :term', { term: `%${queryParams.searchNameTerm}%` })
+      .where('b.name ~~* :term and b.isBanned = false ', {
+        term: `%${queryParams.searchNameTerm}%`,
+      })
       .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
