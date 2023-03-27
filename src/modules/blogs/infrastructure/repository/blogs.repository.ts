@@ -11,9 +11,7 @@ export class BlogsRepository {
   constructor(
     @InjectRepository(Blog) private blogEntity: Repository<Blog>,
     @InjectRepository(BlogBanList) private blogBanListEntity: Repository<BlogBanList>,
-  ) {
-    console.log('BlogsRepository init');
-  }
+  ) {}
 
   async findById(blogId: string): Promise<Blog> {
     const blog = await this.blogEntity

@@ -43,8 +43,6 @@ export class LikesRepository {
         'l.parentId = :parentId and l.userId = :userId and l.parentType = :parentType ',
         { parentId, userId, parentType },
       )
-      //.andWhere('l.userId = :userId', { userId })
-      //.andWhere('l.parentType = :parentType', { parentType })
       .getOne();
     return like;
   }

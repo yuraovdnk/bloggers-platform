@@ -10,7 +10,6 @@ import { UsersRepository } from '../../modules/users/infrastructure/repository/u
 export class JwtCookieGuard extends AuthGuard('jwt-cookie') {
   constructor() {
     super();
-    console.log('JwtCookieGuard');
   }
 }
 

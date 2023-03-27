@@ -19,9 +19,9 @@ export class ResendConfirmCodeUseCase implements ICommandHandler<ResendConfirmCo
 
   async execute(command: ResendConfirmCodeCommand): Promise<any> {
     const user = await this.usersRepository.findByEmail(command.email);
-    // if (!user || user.isConfirmedEmail) {
-    //   throw new BadRequestException(mapErrors('Something went wrong', 'email'));
-    // }
+    if (!user || user.isConfirmedEmail) {
+      throw new BadRequestException(mapErrors('Something went wrong', 'email'));
+    }
 
     const newConfirmCode = uuid();
     const expirationConfirmCode = add(new Date(), {

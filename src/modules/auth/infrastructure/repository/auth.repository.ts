@@ -6,9 +6,7 @@ import { DeviceInfoType } from '../../../../common/decorators/device-meta.decota
 
 @Injectable()
 export class AuthRepository {
-  constructor(@InjectRepository(AuthSession) private authEntity: Repository<AuthSession>) {
-    console.log('AuthRepository init');
-  }
+  constructor(@InjectRepository(AuthSession) private authEntity: Repository<AuthSession>) {}
 
   async create(
     userId: string,

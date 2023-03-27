@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
@@ -27,13 +28,11 @@ export class SaUsersController {
   constructor(
     private readonly usersQueryRepository: UsersQueryRepository,
     private commandBus: CommandBus,
-  ) {
-    console.log('SaUsersController init');
-  }
+  ) {}
 
   //create User
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
     const createdUserId = await this.commandBus.execute(
       new CreateUserCommand(createUserDto),
@@ -49,15 +48,16 @@ export class SaUsersController {
 
   //get user by id
   @Delete(':userId')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async removeUser(@Param('userId', ParseUUIDPipe) userId: string) {
     await this.commandBus.execute(new RemoveUserCommand(userId));
   }
 
   //ban user
   @Put(':userId/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async banUser(@Param('userId') userId: string, @Body() banUserDto: BanUserDto) {
-    return this.commandBus.execute(
+    await this.commandBus.execute(
       new BanUserCommand(userId, banUserDto.banReason, banUserDto.isBanned),
     );
   }

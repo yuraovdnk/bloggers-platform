@@ -12,9 +12,7 @@ import { SortFieldsPostModel } from '../../../posts/application/types/posts.type
 
 @Injectable()
 export class CommentsQueryRepository {
-  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {
-    console.log('CommentsQueryRepository init');
-  }
+  constructor(@InjectRepository(Comment) private commentEntity: Repository<Comment>) {}
 
   async findById(commentId: string, userId: string): Promise<CommentViewModel | null> {
     const comment: Comment = await this.commentEntity
@@ -104,7 +102,10 @@ export class CommentsQueryRepository {
     return new PageDto<CommentViewModel>(mappedComments, queryParams, totalCount);
   }
 
-  async findAllCommentsForBlogs(queryParams: QueryParamsDto, userId: string) {
+  async findAllCommentsForBlogs(
+    queryParams: QueryParamsDto,
+    userId: string,
+  ): Promise<PageDto<BloggerCommentViewModel>> {
     const [comments, totalCount] = await this.commentEntity
       .createQueryBuilder('c')
       .select('c')

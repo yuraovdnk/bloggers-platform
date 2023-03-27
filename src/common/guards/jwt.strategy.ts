@@ -9,7 +9,6 @@ import { AuthRepository } from '../../modules/auth/infrastructure/repository/aut
 export class JwtGuard extends AuthGuard('jwt') {
   constructor() {
     super();
-    console.log('JwtGuard');
   }
 }
 

@@ -7,9 +7,7 @@ import { log } from 'util';
 
 @Injectable()
 export class PostsRepository {
-  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {
-    console.log('PostsRepository');
-  }
+  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {}
 
   async create(newPost: DbPostDto) {
     const post = new Post();

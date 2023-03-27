@@ -10,9 +10,7 @@ import { PostViewModel } from '../../application/dto/post-view.model';
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {
-    console.log('PostsQueryRepository init');
-  }
+  constructor(@InjectRepository(Post) private postEntity: Repository<Post>) {}
 
   async getAll(queryParams: QueryParamsDto, userId = null) {
     const queryBuilder = this.postEntity.createQueryBuilder('post');

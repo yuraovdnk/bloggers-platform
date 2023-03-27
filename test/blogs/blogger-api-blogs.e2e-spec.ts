@@ -80,6 +80,7 @@ describe('Blogger', () => {
       expect(res.body.description).toEqual(blogPayload.description);
       expect(res.body.websiteUrl).toEqual(blogPayload.websiteUrl);
     });
+
     it('shouldn`t create blog', async function () {
       await request(app.getHttpServer())
         .post('/blogger/blogs')

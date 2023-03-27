@@ -9,9 +9,7 @@ import { UserViewModel } from '../../application/dto/response/user-view.model';
 
 @Injectable()
 export class UsersQueryRepository {
-  constructor(@InjectRepository(User) private userEntity: Repository<User>) {
-    console.log('UsersQueryRepository init');
-  }
+  constructor(@InjectRepository(User) private userEntity: Repository<User>) {}
 
   async findById(userId: string): Promise<UserViewModel> {
     const user = await this.userEntity

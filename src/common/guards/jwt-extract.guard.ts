@@ -9,9 +9,7 @@ export class JwtExtractGuard implements CanActivate {
     private usersRepo: UsersRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {
-    console.log('JwtExtractGuard init');
-  }
+  ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     if (!request.headers.authorization) {

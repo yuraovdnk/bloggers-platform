@@ -22,7 +22,6 @@ import { GenerateTokensCommand } from '../use-cases/generateTokens';
 import { UsersQueryRepository } from '../../../users/infrastructure/repository/users.query.repository';
 import { SignOutCommand } from '../use-cases/signOut';
 import { User } from '../../../users/domain/entity/user.entity';
-import { AuthService } from '../auth.service';
 
 @Throttle(5, 10)
 @Controller('auth')

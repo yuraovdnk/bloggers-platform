@@ -27,9 +27,7 @@ export class CommentsController {
   constructor(
     private commandBus: CommandBus,
     private commentsQueryRepository: CommentsQueryRepository,
-  ) {
-    console.log('CommentsController init');
-  }
+  ) {}
 
   //Update comment
   @UseGuards(JwtGuard)

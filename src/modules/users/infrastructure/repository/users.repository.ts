@@ -10,9 +10,7 @@ export class UsersRepository {
   constructor(
     @InjectRepository(User) private userEntity: Repository<User>,
     @InjectRepository(BanList) private banListEntity: Repository<BanList>,
-  ) {
-    console.log('UsersRepository');
-  }
+  ) {}
 
   async create(newUser: UserDbDto): Promise<User> {
     const user = new User();
@@ -28,16 +26,13 @@ export class UsersRepository {
   }
 
   async findByLoginOrEmail(loginOrEmail: string) {
-    return this.userEntity.findOne({
-      where: [{ email: loginOrEmail }, { login: loginOrEmail }],
-    });
     const user = await this.userEntity
       .createQueryBuilder('user')
       .select('user')
-      //.leftJoinAndMapOne('ban', 'user.banInfo', 'dsf')
+      .leftJoinAndSelect('user.banInfo', 'banInfo')
       .where('user.email = :email', { email: loginOrEmail })
       .orWhere('user.login = :login', { login: loginOrEmail })
-      .getRawOne();
+      .getOne();
     return user;
   }
 

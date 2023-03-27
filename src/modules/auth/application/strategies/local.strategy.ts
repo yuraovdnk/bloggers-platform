@@ -11,7 +11,6 @@ import { User } from '../../../users/domain/entity/user.entity';
 export class LocalAuthGuard extends AuthGuard('local') {
   constructor() {
     super();
-    console.log('LocalAuthGuard init ');
   }
 }
 
@@ -26,7 +25,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
 
   async validate(loginOrEmail: string, password: string): Promise<any> {
     const candidate: User = await this.usersRepository.findByLoginOrEmail(loginOrEmail);
-
     if (!candidate || !candidate.canLogin()) throw new UnauthorizedException();
 
     const isValidPassword = await bcrypt.compare(password, candidate.passwordHash);

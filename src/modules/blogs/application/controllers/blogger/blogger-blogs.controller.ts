@@ -33,6 +33,7 @@ import { DeletePostCommand } from '../../use-cases/commands/delete-post.use-case
 import { BlogsQueryRepository } from '../../../infrastructure/repository/blogs.query.repository';
 import { IBloggerBlogsQueryRepository } from '../../interfaces/IBloggerBlogsQueryRepostory';
 import { CommentsQueryRepository } from '../../../../comments/infrastructure/repository/comments.query.repository';
+import { BloggerCommentViewModel } from '../../dto/response/blogger-comment-view.model';
 
 @Controller('blogger')
 @UseGuards(JwtGuard)
@@ -43,9 +44,7 @@ export class BloggerBlogsController {
     private commandBus: CommandBus,
     private postsQueryRepository: PostsQueryRepository,
     private commentsRepository: CommentsQueryRepository,
-  ) {
-    console.log('BloggerBlogsController init');
-  }
+  ) {}
 
   //get all blogs
   @Get('blogs')
@@ -131,7 +130,7 @@ export class BloggerBlogsController {
   async getCommentsForPosts(
     @CurrentUser() userId: string,
     @Param() queryParams: QueryParamsDto,
-  ) {
+  ): Promise<PageDto<BloggerCommentViewModel>> {
     return this.commentsRepository.findAllCommentsForBlogs(queryParams, userId);
   }
 }

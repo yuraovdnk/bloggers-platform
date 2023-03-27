@@ -15,7 +15,7 @@ import { BlogModule } from './modules/blogs/blog.module';
 import { PostModule } from './modules/posts/post.module';
 import { CommentModule } from './modules/comments/comment.module';
 
-const configModule = ConfigModule.forRoot({
+export const configModule = ConfigModule.forRoot({
   load: [getConfig],
   isGlobal: true,
   envFilePath: ['.env'],

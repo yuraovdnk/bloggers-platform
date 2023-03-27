@@ -20,9 +20,7 @@ export class BlogsQueryRepository
   constructor(
     @InjectRepository(Blog) private blogEntity: Repository<Blog>,
     @InjectRepository(BlogBanList) private blogBanListEntity: Repository<BlogBanList>,
-  ) {
-    console.log('BlogsQueryRepository init');
-  }
+  ) {}
 
   async findById(blogId: string): Promise<BlogViewModel | null> {
     const blog = await this.blogEntity
