@@ -1,12 +1,16 @@
 import { BlogViewModel } from './blog-view.model';
+import { Blog } from '../../../domain/entity/blog.entity';
 
 export class SaBlogViewModel extends BlogViewModel {
   blogOwnerInfo: {
     userId: string;
     userLogin: string;
   };
-
-  constructor(model: any) {
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date;
+  };
+  constructor(model: Blog) {
     super(model);
     this.blogOwnerInfo = {
       userId: model.user.id,

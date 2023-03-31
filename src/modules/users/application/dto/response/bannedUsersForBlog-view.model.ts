@@ -1,4 +1,4 @@
-import { BlogBanList } from '../../../../blogs/domain/entity/blogBanList.entity';
+import { BlogBlackList } from '../../../../blogs/domain/entity/blogBlackList.entity';
 
 export class BannedUsersForBlogViewModel {
   id: string;
@@ -8,7 +8,7 @@ export class BannedUsersForBlogViewModel {
     banDate: Date;
     banReason: string;
   };
-  constructor(model: BlogBanList) {
+  constructor(model: BlogBlackList) {
     this.id = model.userId;
     this.login = model.user.login;
     this.banInfo = {

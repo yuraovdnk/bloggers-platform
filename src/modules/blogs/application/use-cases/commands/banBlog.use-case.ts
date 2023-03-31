@@ -11,7 +11,12 @@ export class BanBlogUseCase implements ICommandHandler<BanBlogCommand> {
   async execute(command: BanBlogCommand) {
     const blog = await this.blogsRepository.findById(command.blogId);
     if (!blog) throw new NotFoundException();
-    blog.isBanned = command.banStatus;
-    await this.blogsRepository.save(blog);
+
+    if (!command.banStatus) {
+      return this.blogsRepository.unBanBlog(command.blogId);
+    }
+
+    blog.ban();
+    return this.blogsRepository.save(blog);
   }
 }

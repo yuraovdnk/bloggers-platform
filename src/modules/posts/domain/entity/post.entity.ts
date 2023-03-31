@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { CommonEntity } from '../../../../common/utils/base.entity';
 import { Blog } from '../../../blogs/domain/entity/blog.entity';
 import { Comment } from '../../../comments/domain/entity/comment.entity';

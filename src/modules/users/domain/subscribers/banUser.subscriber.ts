@@ -1,14 +1,14 @@
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
-import { BanList } from '../entity/banList.entity';
+import { UsersBanList } from '../entity/userBanList.entity';
 import { AuthSession } from '../../../auth/domain/entity/authSession.entity';
 
 @EventSubscriber()
-export class BanUserSubscriber implements EntitySubscriberInterface<BanList> {
+export class BanUserSubscriber implements EntitySubscriberInterface<UsersBanList> {
   listenTo() {
-    return BanList;
+    return UsersBanList;
   }
 
-  async afterInsert(event: InsertEvent<BanList>): Promise<void> {
+  async afterInsert(event: InsertEvent<UsersBanList>): Promise<void> {
     await event.manager
       .getRepository(AuthSession)
       .createQueryBuilder()

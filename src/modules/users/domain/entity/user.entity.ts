@@ -1,7 +1,7 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { BanList } from './banList.entity';
+import { UsersBanList } from './userBanList.entity';
 
 @Entity('Users')
 export class User {
@@ -35,8 +35,8 @@ export class User {
   @Column({ type: 'timestamp', default: null, nullable: true })
   expirationPasswordRecoveryCode: Date;
 
-  @OneToOne(() => BanList, (b) => b.user, { eager: true })
-  banInfo: BanList;
+  @OneToOne(() => UsersBanList, (b) => b.user, { eager: true })
+  banInfo: UsersBanList;
 
   canLogin() {
     return this.isConfirmedEmail && !this.banInfo;
@@ -53,7 +53,6 @@ export class User {
       this.expirationConfirmCode < new Date() ||
       this.confirmCode !== confirmCode
     ) {
-      //TODO exception
       throw new Error();
     }
     this.isConfirmedEmail = true;

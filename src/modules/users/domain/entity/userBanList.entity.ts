@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('BanList')
-export class BanList {
+@Entity('Users_BanList')
+export class UsersBanList {
   @PrimaryColumn()
   userId: string;
 

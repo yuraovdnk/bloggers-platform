@@ -1,3 +1,5 @@
+import { User } from '../../../domain/entity/user.entity';
+
 export class UserViewModel {
   id: string;
   login: string;
@@ -9,7 +11,7 @@ export class UserViewModel {
     banReason: string;
   };
 
-  constructor(user: any) {
+  constructor(user: User) {
     this.id = user.id;
     this.login = user.login;
     this.email = user.email;

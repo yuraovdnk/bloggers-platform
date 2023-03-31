@@ -9,7 +9,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { RemoveUserUseCase } from './application/use-cases/removeUser';
 import { UsersService } from './application/users.service';
 import { BasicStrategy } from '../auth/application/strategies/basic.strategy';
-import { BanList } from './domain/entity/banList.entity';
+import { UsersBanList } from './domain/entity/userBanList.entity';
 import { BanUserUseCase } from './application/use-cases/banUser.use-case';
 import { BloggerUsersController } from './application/controllers/blogger/blogger.users.controller';
 import { BanUserForBlogUseCase } from './application/use-cases/banUserForBlog.use-case';
@@ -24,7 +24,7 @@ const useCases = [
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([User, BanList]),
+    TypeOrmModule.forFeature([User, UsersBanList]),
     forwardRef(() => BlogModule),
   ],
   controllers: [SaUsersController, BloggerUsersController],

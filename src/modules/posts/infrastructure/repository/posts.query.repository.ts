@@ -17,6 +17,7 @@ export class PostsQueryRepository {
     queryBuilder
       .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
+      .leftJoin('blog.banInfo', 'banInfo')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -61,12 +62,11 @@ export class PostsQueryRepository {
               .offset(0);
           }, 'newestLikes');
       })
-      .where('blog.isBanned = false')
+      .where('"banInfo" is null')
       .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip);
-
     const posts = await queryBuilder.getRawMany();
     if (!posts.length) throw new NotFoundException();
     const totalCount = await queryBuilder.getCount();
@@ -140,6 +140,7 @@ export class PostsQueryRepository {
     queryBuilder
       .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
+      .leftJoin('blog.banInfo', 'banInfo')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -184,7 +185,7 @@ export class PostsQueryRepository {
               .offset(0);
           }, 'newestLikes');
       })
-      .where('post.blogId = :blogId and blog.isBanned = false', { blogId })
+      .where('post.blogId = :blogId and "banInfo" is null', { blogId })
       .groupBy('post.id,"post_blogName"')
       .orderBy(`"post_${queryParams.sortByField(SortFieldsPostModel)}"`, queryParams.order)
       .limit(queryParams.pageSize)

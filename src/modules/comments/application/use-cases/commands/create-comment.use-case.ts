@@ -24,7 +24,7 @@ export class CreateCommentUseCase implements ICommandHandler<CreateCommentComman
     if (!post) {
       throw new NotFoundException();
     }
-    const userIsBannedForBlog = !!post.blog.usersBanList.length;
+    const userIsBannedForBlog = !!post.blog.usersBlackList.length;
     if (userIsBannedForBlog) throw new ForbiddenException();
 
     const newCommentDto = {

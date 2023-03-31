@@ -18,10 +18,11 @@ import { CreatePostForBlogUseCase } from './application/use-cases/commands/creat
 import { UpdatePostUseCase } from './application/use-cases/commands/update-post.use-case';
 import { DeletePostUseCase } from './application/use-cases/commands/delete-post.use-case';
 import { BindBlogWithUserUseCase } from './application/use-cases/commands/bindBlogWithUser.use-case';
-import { BlogBanList } from './domain/entity/blogBanList.entity';
+import { BlogBlackList } from './domain/entity/blogBlackList.entity';
 import { BanUserForBlogUseCase } from '../users/application/use-cases/banUserForBlog.use-case';
 import { BanBlogUseCase } from './application/use-cases/commands/banBlog.use-case';
 import { CommentModule } from '../comments/comment.module';
+import { BlogBanList } from './domain/entity/blogBanList';
 
 const useCases = [
   CreateBlogUseCase,
@@ -37,7 +38,7 @@ const useCases = [
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([Blog, BlogBanList]),
+    TypeOrmModule.forFeature([Blog, BlogBlackList, BlogBanList]),
     forwardRef(() => UserModule),
     forwardRef(() => PostModule),
     forwardRef(() => CommentModule),

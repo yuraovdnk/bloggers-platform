@@ -3,13 +3,13 @@ import { User } from '../../domain/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { UserDbDto } from '../../application/types/user.types';
-import { BanList } from '../../domain/entity/banList.entity';
+import { UsersBanList } from '../../domain/entity/userBanList.entity';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(User) private userEntity: Repository<User>,
-    @InjectRepository(BanList) private banListEntity: Repository<BanList>,
+    @InjectRepository(UsersBanList) private banListEntity: Repository<UsersBanList>,
   ) {}
 
   async create(newUser: UserDbDto): Promise<User> {
@@ -81,7 +81,7 @@ export class UsersRepository {
   }
 
   async banUser(userId: string, banReason: string, isBanned: boolean) {
-    const banUser = new BanList();
+    const banUser = new UsersBanList();
     banUser.userId = userId;
     banUser.banReason = banReason;
     banUser.isBanned = isBanned;
@@ -91,7 +91,7 @@ export class UsersRepository {
     const banUser = await this.banListEntity
       .createQueryBuilder('banList')
       .delete()
-      .from(BanList)
+      .from(UsersBanList)
       .where('userId = :userId', { userId })
       .execute();
     return banUser;

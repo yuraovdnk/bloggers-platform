@@ -1,8 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { CommonEntity } from '../../../../common/utils/base.entity';
 import { User } from '../../../users/domain/entity/user.entity';
-import { BlogBanList } from './blogBanList.entity';
+import { BlogBlackList } from './blogBlackList.entity';
 import { Post } from '../../../posts/domain/entity/post.entity';
+import { BlogBanList } from './blogBanList';
+import { BlogInputDbType } from '../../application/types/blogs.types';
+import { BanUserForBlogDto } from '../../../users/application/dto/request/banUserForBlog.dto';
 
 @Entity('Blogs')
 export class Blog extends CommonEntity {
@@ -18,15 +21,27 @@ export class Blog extends CommonEntity {
   @Column('uuid')
   userId: string;
 
-  @Column({ type: 'boolean', default: false })
-  isBanned: boolean;
-
   @ManyToOne(() => User, (u) => u.id, { onDelete: 'CASCADE' })
   user: User;
 
-  @OneToMany(() => BlogBanList, (b) => b.blog, { onDelete: 'CASCADE' })
-  usersBanList: BlogBanList[];
+  @OneToMany(() => BlogBlackList, (b) => b.blog, { onDelete: 'CASCADE' })
+  usersBlackList: BlogBlackList[];
 
   @OneToMany(() => Post, (p) => p.blog)
   posts: Post[];
+
+  @OneToOne(() => BlogBanList, (b) => b.blog, { cascade: ['insert', 'update'], eager: true })
+  banInfo: BlogBanList;
+
+  static create(newBlog: BlogInputDbType) {
+    const blog = new Blog();
+    blog.name = newBlog.name;
+    blog.description = newBlog.description;
+    blog.websiteUrl = newBlog.websiteUrl;
+    blog.userId = newBlog.userId;
+    return blog;
+  }
+  ban() {
+    this.banInfo = new BlogBanList(this.id, true);
+  }
 }
