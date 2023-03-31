@@ -24,9 +24,9 @@ export class PostsRepository {
       .createQueryBuilder('p')
       .leftJoinAndSelect('p.blog', 'blog')
       .leftJoinAndSelect(
-        'blog.usersBanList',
-        'usersBanList',
-        'usersBanList.userId = :userId',
+        'blog.usersBlackList',
+        'usersBlackList',
+        'usersBlackList.userId = :userId',
         { userId },
       )
       .where('p.id = :postId', { postId })
