@@ -80,6 +80,7 @@ export class PostsQueryRepository {
       .createQueryBuilder('post')
       .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
+      .leftJoin('blog.banInfo', 'banInfo')
       .addSelect((subQuery) => {
         return subQuery
           .select(`COALESCE(l.likeStatus,'None') as "post_myStatus"`)
@@ -125,7 +126,7 @@ export class PostsQueryRepository {
           }, 'newestLikes');
       })
       .groupBy('post.id,"post_blogName"')
-      .where('post.id = :postId and blog.isBanned = false', { postId })
+      .where('post.id = :postId and "banInfo" is null', { postId })
       .getRawOne();
 
     return post ? new PostViewModel(post) : null;
