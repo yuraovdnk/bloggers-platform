@@ -73,6 +73,7 @@ export class BlogsQueryRepository
       .select(['b', 'blogOwnerInfo.login', 'blogOwnerInfo.id'])
       .where('b.name ~~* :term', { term: `%${queryParams.searchNameTerm}%` })
       .leftJoin('b.user', 'blogOwnerInfo')
+      .leftJoinAndSelect('b.banInfo', 'banInfo')
       .orderBy(`b.${queryParams.sortByField(SortFieldsBlogModel)}`, queryParams.order)
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)

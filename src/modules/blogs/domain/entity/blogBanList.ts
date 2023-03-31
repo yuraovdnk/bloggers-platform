@@ -14,7 +14,7 @@ export class BlogBanList {
   isBanned: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
-  banDate: boolean;
+  banDate: Date;
 
   @OneToOne(() => Blog, (b) => b.banInfo)
   @JoinColumn()

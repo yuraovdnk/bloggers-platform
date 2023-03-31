@@ -16,5 +16,9 @@ export class SaBlogViewModel extends BlogViewModel {
       userId: model.user.id,
       userLogin: model.user.login,
     };
+    this.banInfo = {
+      isBanned: model.banInfo?.isBanned ?? false,
+      banDate: model.banInfo?.banDate ?? null,
+    };
   }
 }
