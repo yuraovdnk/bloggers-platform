@@ -26,7 +26,8 @@ export class BlogsQueryRepository
     const blog = await this.blogEntity
       .createQueryBuilder('b')
       .select('b')
-      .where('b.id = :blogId', { blogId })
+      .leftJoin('b.banInfo', 'banInfo')
+      .where('b.id = :blogId and "banInfo" is null', { blogId })
       .getOne();
 
     return blog ? new BlogViewModel(blog) : null;
