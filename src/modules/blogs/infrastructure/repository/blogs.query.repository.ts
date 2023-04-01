@@ -12,6 +12,7 @@ import { IBloggerBlogsQueryRepository } from '../../application/interfaces/IBlog
 import { BlogBlackList } from '../../domain/entity/blogBlackList.entity';
 import { BannedUsersForBlogViewModel } from '../../../users/application/dto/response/bannedUsersForBlog-view.model';
 import { BloggerQueryParamsDto } from '../../../../common/dtos/blogger-query-params.dto';
+import { SortFieldUserModel } from '../../../users/application/types/user.types';
 
 @Injectable()
 export class BlogsQueryRepository
@@ -100,7 +101,14 @@ export class BlogsQueryRepository
         blogId,
         login: `%${queryParams.searchLoginTerm}%`,
       })
+      .orderBy(
+        `bannedUser.${queryParams.sortByField(SortFieldUserModel)}`,
+        queryParams.order,
+      )
+      .limit(queryParams.pageSize)
+      .offset(queryParams.skip)
       .getManyAndCount();
+
     if (!users.length) throw new NotFoundException();
     const mapperUsers = users.map((user) => new BannedUsersForBlogViewModel(user));
     return new PageDto(mapperUsers, queryParams, totalCount);
