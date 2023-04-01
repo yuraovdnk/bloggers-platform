@@ -21,10 +21,10 @@ export class Blog extends CommonEntity {
   @Column('uuid')
   userId: string;
 
-  @ManyToOne(() => User, (u) => u.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (u) => u.id)
   user: User;
 
-  @OneToMany(() => BlogBlackList, (b) => b.blog, { onDelete: 'CASCADE' })
+  @OneToMany(() => BlogBlackList, (b) => b.blog)
   usersBlackList: BlogBlackList[];
 
   @OneToMany(() => Post, (p) => p.blog)

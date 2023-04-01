@@ -16,7 +16,7 @@ export class BlogBanList {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
   banDate: Date;
 
-  @OneToOne(() => Blog, (b) => b.banInfo)
+  @OneToOne(() => Blog, (b) => b.banInfo, { onDelete: 'CASCADE' })
   @JoinColumn()
   blog: Blog;
 }

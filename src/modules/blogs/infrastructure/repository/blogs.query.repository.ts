@@ -96,6 +96,7 @@ export class BlogsQueryRepository
         login: `%${queryParams.searchLoginTerm}%`,
       })
       .getManyAndCount();
+
     const mapperUsers = users.map((user) => new BannedUsersForBlogViewModel(user));
     return new PageDto(mapperUsers, queryParams, totalCount);
   }
