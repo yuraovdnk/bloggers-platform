@@ -20,6 +20,7 @@ import { IBloggerBlogsQueryRepository } from '../../../../blogs/application/inte
 import { BloggerQueryParamsDto } from '../../../../../common/dtos/blogger-query-params.dto';
 import { PageDto } from '../../../../../common/utils/PageDto';
 import { BannedUsersForBlogViewModel } from '../../dto/response/bannedUsersForBlog-view.model';
+import { CurrentUser } from '../../../../../common/decorators/current-user.decorator';
 
 @UseGuards(JwtGuard)
 @Controller('blogger/users')
@@ -35,8 +36,11 @@ export class BloggerUsersController {
   async banUserForBlog(
     @Param('userId', ParseUUIDPipe) userId: string,
     @Body() banUserDto: BanUserForBlogDto,
+    @CurrentUser() currentUserId: string,
   ): Promise<void> {
-    await this.commandBus.execute(new BanUserForBlogCommand(userId, banUserDto));
+    await this.commandBus.execute(
+      new BanUserForBlogCommand(userId, banUserDto, currentUserId),
+    );
   }
 
   @Get('blog/:blogId')

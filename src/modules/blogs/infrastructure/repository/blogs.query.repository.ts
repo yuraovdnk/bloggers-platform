@@ -81,7 +81,7 @@ export class BlogsQueryRepository
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
       .getManyAndCount();
-    console.log(!blogs.length);
+
     if (!blogs.length) throw new NotFoundException();
     const blogResponseDto = blogs.map((item) => new SaBlogViewModel(item));
     return new PageDto(blogResponseDto, queryParams, totalCount);
@@ -100,7 +100,7 @@ export class BlogsQueryRepository
         login: `%${queryParams.searchLoginTerm}%`,
       })
       .getManyAndCount();
-
+    if (!users.length) throw new NotFoundException();
     const mapperUsers = users.map((user) => new BannedUsersForBlogViewModel(user));
     return new PageDto(mapperUsers, queryParams, totalCount);
   }
