@@ -45,6 +45,8 @@ export class BlogsQueryRepository
       .offset(queryParams.skip)
       .getManyAndCount();
 
+    if (!blogs.length) throw new NotFoundException();
+
     const blogResponseDto = blogs.map((item) => new BlogViewModel(item));
     return new PageDto(blogResponseDto, queryParams, totalCount);
   }
@@ -62,6 +64,7 @@ export class BlogsQueryRepository
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
       .getManyAndCount();
+    if (!blogs.length) throw new NotFoundException();
 
     const blogResponseDto = blogs.map((item) => new BlogViewModel(item));
     return new PageDto(blogResponseDto, queryParams, totalCount);
@@ -78,6 +81,7 @@ export class BlogsQueryRepository
       .limit(queryParams.pageSize)
       .offset(queryParams.skip)
       .getManyAndCount();
+    console.log(!blogs.length);
     if (!blogs.length) throw new NotFoundException();
     const blogResponseDto = blogs.map((item) => new SaBlogViewModel(item));
     return new PageDto(blogResponseDto, queryParams, totalCount);
