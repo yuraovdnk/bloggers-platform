@@ -109,7 +109,6 @@ export class BlogsQueryRepository
       .offset(queryParams.skip)
       .getManyAndCount();
 
-    if (!users.length) throw new NotFoundException();
     const mapperUsers = users.map((user) => new BannedUsersForBlogViewModel(user));
     return new PageDto(mapperUsers, queryParams, totalCount);
   }
