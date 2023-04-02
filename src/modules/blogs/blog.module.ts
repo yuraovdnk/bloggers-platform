@@ -54,7 +54,7 @@ const useCases = [
       useClass: BlogsQueryRepository,
     },
   ],
-  exports: [BlogsRepository, BlogsQueryRepository.name],
+  exports: [BlogsRepository, BlogsQueryRepository.name, BlogsService],
 })
 export class BlogModule {
   constructor() {

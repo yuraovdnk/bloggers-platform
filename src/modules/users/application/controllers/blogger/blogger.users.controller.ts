@@ -21,6 +21,7 @@ import { BloggerQueryParamsDto } from '../../../../../common/dtos/blogger-query-
 import { PageDto } from '../../../../../common/utils/PageDto';
 import { BannedUsersForBlogViewModel } from '../../dto/response/bannedUsersForBlog-view.model';
 import { CurrentUser } from '../../../../../common/decorators/current-user.decorator';
+import { BlogsService } from '../../../../blogs/application/blogs.service';
 
 @UseGuards(JwtGuard)
 @Controller('blogger/users')
@@ -29,6 +30,7 @@ export class BloggerUsersController {
     private commandBus: CommandBus,
     @Inject(BlogsQueryRepository.name)
     private blogsQueryRepository: IBloggerBlogsQueryRepository,
+    private blogsService: BlogsService,
   ) {}
 
   @Put(':userId/ban')
@@ -47,7 +49,8 @@ export class BloggerUsersController {
   async getBannedUsers(
     @Param('blogId', ParseUUIDPipe) blogId: string,
     @Query() queryParams: BloggerQueryParamsDto,
+    @CurrentUser() userId: string,
   ): Promise<PageDto<BannedUsersForBlogViewModel>> {
-    return this.blogsQueryRepository.getBannedUsersForBlog(blogId, queryParams);
+    return this.blogsService.getBannedUsers(userId, blogId, queryParams);
   }
 }
