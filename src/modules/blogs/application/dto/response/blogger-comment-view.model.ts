@@ -21,6 +21,7 @@ export class BloggerCommentViewModel {
       userId: model.userId,
       userLogin: model.user.login,
     };
+    this.createdAt = model.createdAt;
     this.postInfo = {
       id: model.post.id,
       title: model.post.title,

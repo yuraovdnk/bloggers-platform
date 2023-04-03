@@ -5,5 +5,5 @@ export class CommonEntity {
   readonly id: string;
 
   @Column({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
-  readonly createdAt: string;
+  readonly createdAt: Date;
 }
