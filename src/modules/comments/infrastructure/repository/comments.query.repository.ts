@@ -90,7 +90,8 @@ export class CommentsQueryRepository {
         'likes',
         `"likes"."l_parentId" = comment.id and "likes"."l_parentType" = 'comment' `,
       )
-      .where('comment.postId = :postId and "user_banInfo" is null ', { postId })
+      //.where('comment.postId = :postId and "user_banInfo" is null ', { postId })
+      .where('comment.postId = :postId', { postId })
       .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order);
 
     const totalCount = await queryBuilder.getCount();
