@@ -106,7 +106,8 @@ export class CommentsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string,
   ): Promise<PageDto<BloggerCommentViewModel>> {
-    const comments = await this.commentEntity
+    console.log(queryParams.sortByField(SortCommentFields));
+    const queryBuilder = this.commentEntity
       .createQueryBuilder('comment')
       .select([
         'comment',
@@ -134,9 +135,11 @@ export class CommentsQueryRepository {
       .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order)
       .groupBy('comment.id, post.id, blog.id, user.id')
       .limit(queryParams.pageSize)
-      .offset(queryParams.skip)
-      .getRawMany();
+      .offset(queryParams.skip);
+
+    const totalCount = await queryBuilder.getCount();
+    const comments = await queryBuilder.getRawMany();
     const mappedComments = comments.map((i) => new BloggerCommentViewModel(i));
-    return new PageDto(mappedComments, queryParams, comments.length);
+    return new PageDto(mappedComments, queryParams, totalCount);
   }
 }
