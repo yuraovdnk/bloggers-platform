@@ -129,7 +129,7 @@ export class BloggerBlogsController {
   @Get('blogs/comments')
   async getCommentsForPosts(
     @CurrentUser() userId: string,
-    @Param() queryParams: QueryParamsDto,
+    @Query() queryParams: QueryParamsDto,
   ): Promise<PageDto<BloggerCommentViewModel>> {
     return this.commentsRepository.findAllCommentsForBlogs(queryParams, userId);
   }

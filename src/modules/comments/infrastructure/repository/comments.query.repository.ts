@@ -132,8 +132,8 @@ export class CommentsQueryRepository {
       )
       .where('blog.userId = :userId', { userId })
       .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order)
-      .limit(queryParams.pageSize)
       .groupBy('comment.id, post.id, blog.id, user.id')
+      .limit(queryParams.pageSize)
       .offset(queryParams.skip)
       .getRawMany();
     const mappedComments = comments.map((i) => new BloggerCommentViewModel(i));
