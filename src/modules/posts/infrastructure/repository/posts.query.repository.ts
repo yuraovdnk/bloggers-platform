@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Like } from '../../../likes/domain/like.entity';
 import { PageDto } from '../../../../common/utils/PageDto';
-import { PostRawQuery, SortFieldsPostModel } from '../../application/types/posts.type';
+import { RawQueryPost, SortFieldsPostModel } from '../../application/types/posts.type';
 import { PostViewModel } from '../../application/dto/post-view.model';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class PostsQueryRepository {
   }
 
   async getById(postId: string, userId = null): Promise<PostViewModel> {
-    const post: PostRawQuery = await this.postEntity
+    const post: RawQueryPost = await this.postEntity
       .createQueryBuilder('post')
       .select(['post', 'blog.name as "post_blogName"'])
       .leftJoin('post.blog', 'blog')
@@ -193,7 +193,7 @@ export class PostsQueryRepository {
       .offset(queryParams.skip);
 
     const totalCount = await queryBuilder.getCount();
-    const posts: PostRawQuery[] = await queryBuilder.getRawMany();
+    const posts: RawQueryPost[] = await queryBuilder.getRawMany();
 
     const postResponseDto = posts.map((i) => new PostViewModel(i));
     return new PageDto(postResponseDto, queryParams, totalCount);

@@ -92,6 +92,7 @@ export class CommentsQueryRepository {
       )
       .where('comment.postId = :postId and "user_banInfo" is null ', { postId })
       .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order);
+
     const totalCount = await queryBuilder.getCount();
     const comments: RawQueryComment[] = await queryBuilder.getRawMany();
     if (!comments.length) {
@@ -105,18 +106,37 @@ export class CommentsQueryRepository {
     queryParams: QueryParamsDto,
     userId: string,
   ): Promise<PageDto<BloggerCommentViewModel>> {
-    const [comments, totalCount] = await this.commentEntity
-      .createQueryBuilder('c')
-      .select('c')
+    const comments = await this.commentEntity
+      .createQueryBuilder('comment')
+      .select([
+        'comment',
+        'user.id',
+        'user.login',
+        'blog.name',
+        'COALESCE(Count(*) filter( WHERE likes."likeStatus" = \'Like\'),0)::int as "comment_likesCount"',
+        'COALESCE(Count(*) filter( WHERE likes."likeStatus" = \'Dislike\'),0)::int as "comment_dislikesCount"',
+      ])
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(`li."likeStatus" as "myStatus"`)
+          .from(Like, 'li')
+          .where('li.parentId = comment.id and li.userId = :userId ', { userId });
+      })
+      .leftJoinAndSelect('comment.post', 'post')
+      .leftJoin('post.blog', 'blog')
+      .leftJoin('comment.user', 'user')
+      .leftJoin(
+        Like,
+        'likes',
+        `"likes"."parentId" = comment.id and "likes"."parentType" = 'comment'`,
+      )
       .where('blog.userId = :userId', { userId })
-      .leftJoinAndSelect('c.post', 'post')
-      .leftJoinAndSelect('post.blog', 'blog')
-      .leftJoinAndSelect('c.user', 'user')
-      .orderBy(`c.${queryParams.sortByField(SortCommentFields)}`, queryParams.order)
+      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order)
       .limit(queryParams.pageSize)
+      .groupBy('comment.id, post.id, blog.id, user.id')
       .offset(queryParams.skip)
-      .getManyAndCount();
+      .getRawMany();
     const mappedComments = comments.map((i) => new BloggerCommentViewModel(i));
-    return new PageDto(mappedComments, queryParams, totalCount);
+    return new PageDto(mappedComments, queryParams, comments.length);
   }
 }

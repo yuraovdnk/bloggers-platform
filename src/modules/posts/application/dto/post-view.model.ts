@@ -1,4 +1,4 @@
-import { PostRawQuery } from '../types/posts.type';
+import { RawQueryPost } from '../types/posts.type';
 import { log } from 'util';
 
 export class PostViewModel {
@@ -16,7 +16,7 @@ export class PostViewModel {
     newestLikes: any[];
   };
 
-  constructor(model: PostRawQuery) {
+  constructor(model: RawQueryPost) {
     console.log('1');
     this.id = model.post_id;
     this.title = model.post_title;

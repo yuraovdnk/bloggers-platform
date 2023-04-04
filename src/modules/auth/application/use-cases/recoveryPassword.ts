@@ -25,6 +25,7 @@ export class RecoveryPasswordUseCase implements ICommandHandler<RecoveryPassword
     });
 
     user.recoverPassword(newRecoveryCode, expirationCode);
+
     await this.usersRepository.save(user);
 
     try {

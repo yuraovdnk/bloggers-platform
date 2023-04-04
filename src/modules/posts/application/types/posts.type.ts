@@ -13,7 +13,7 @@ export class SortFieldsPostModel {
   createdAt = 'blogs.createdAt';
 }
 
-export type PostRawQuery = {
+export type RawQueryPost = {
   post_id: string;
   post_createdAt: Date;
   post_title: string;

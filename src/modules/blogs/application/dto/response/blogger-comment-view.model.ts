@@ -1,4 +1,5 @@
-import { Comment } from '../../../../comments/domain/entity/comment.entity';
+import { RawQueryComment } from '../../../../comments/application/types/comments.type';
+import { RawQueryPost } from '../../../../posts/application/types/posts.type';
 
 export class BloggerCommentViewModel {
   id: string;
@@ -7,6 +8,11 @@ export class BloggerCommentViewModel {
     userId: string;
     userLogin: string;
   };
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: string;
+  };
   createdAt: Date;
   postInfo: {
     id: string;
@@ -14,19 +20,24 @@ export class BloggerCommentViewModel {
     blogId: string;
     blogName: string;
   };
-  constructor(model: Comment) {
-    this.id = model.id;
-    this.content = model.content;
+  constructor(model: RawQueryComment & RawQueryPost & any) {
+    this.id = model.comment_id;
+    this.content = model.comment_content;
     this.commentatorInfo = {
-      userId: model.userId,
-      userLogin: model.user.login,
+      userId: model.comment_userId,
+      userLogin: model.user_login,
     };
-    this.createdAt = model.createdAt;
+    this.likesInfo = {
+      likesCount: model.comment_likesCount,
+      dislikesCount: model.comment_dislikesCount,
+      myStatus: model.myStatus ?? 'None',
+    };
+    this.createdAt = model.comment_createdAt;
     this.postInfo = {
-      id: model.post.id,
-      title: model.post.title,
-      blogId: model.post.blog.id,
-      blogName: model.post.blog.name,
+      id: model.post_id,
+      title: model.post_title,
+      blogId: model.post_blogId,
+      blogName: model.blog_name,
     };
   }
 }
