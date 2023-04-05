@@ -56,7 +56,7 @@ export class CommentsQueryRepository {
     userId: string = null,
   ): Promise<PageDto<CommentViewModel> | null> {
     const queryBuilder = await this.commentEntity.createQueryBuilder('comment');
-
+    console.log(queryParams);
     queryBuilder //l_likeStatus
       .select([
         'comment',
@@ -90,9 +90,10 @@ export class CommentsQueryRepository {
         'likes',
         `"likes"."l_parentId" = comment.id and "likes"."l_parentType" = 'comment' `,
       )
-      //.where('comment.postId = :postId and "user_banInfo" is null ', { postId })
-      .where('comment.postId = :postId', { postId })
-      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order);
+      .where('comment.postId = :postId and "user_banInfo" is null ', { postId })
+      .orderBy(`comment.${queryParams.sortByField(SortCommentFields)}`, queryParams.order)
+      .limit(queryParams.pageSize)
+      .offset(queryParams.skip);
 
     const totalCount = await queryBuilder.getCount();
     const comments: RawQueryComment[] = await queryBuilder.getRawMany();
