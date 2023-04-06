@@ -11,7 +11,7 @@ export class AuthService {
       { userId, deviceId },
       {
         secret: this.configService.get('secrets.secretAccessToken'),
-        expiresIn: '10s',
+        expiresIn: '6m',
       },
     );
 
@@ -19,7 +19,7 @@ export class AuthService {
       { userId, deviceId },
       {
         secret: this.configService.get('secrets.secretRefreshToken'),
-        expiresIn: '20s',
+        expiresIn: '10m',
       },
     );
     return {

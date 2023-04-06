@@ -37,10 +37,10 @@ export const configModule = ConfigModule.forRoot({
   ],
   controllers: [TruncateData],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}
